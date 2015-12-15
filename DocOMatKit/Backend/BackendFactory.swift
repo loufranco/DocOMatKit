@@ -8,6 +8,8 @@
 
 import Foundation
 
+///! An abstract factory to create objects you need to connect
+///! to a documentation back-end
 protocol BackendFactory {
     
 }

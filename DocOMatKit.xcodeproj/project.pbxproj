@@ -9,11 +9,13 @@
 /* Begin PBXBuildFile section */
 		9A5BCD791C1DFF6C003516CF /* DocOMatKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A5BCD781C1DFF6C003516CF /* DocOMatKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9A5BCD801C1DFF6C003516CF /* DocOMatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A5BCD751C1DFF6C003516CF /* DocOMatKit.framework */; };
-		9A5BCD851C1DFF6C003516CF /* DocOMatKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCD841C1DFF6C003516CF /* DocOMatKitTests.swift */; };
 		9A5BCDB11C1E021C003516CF /* HomeTabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDB01C1E021C003516CF /* HomeTabsViewController.swift */; };
 		9A5BCDB31C1E029C003516CF /* HomeTabsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDB21C1E029C003516CF /* HomeTabsViewModel.swift */; };
 		9A5BCDB61C1E02F3003516CF /* BackendFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDB51C1E02F3003516CF /* BackendFactory.swift */; };
 		9A5BCDBB1C1E05FF003516CF /* DocOMatAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDBA1C1E05FF003516CF /* DocOMatAppDelegate.swift */; };
+		9AEF355E1C1F92FA0008EDD8 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF355D1C1F92FA0008EDD8 /* Config.swift */; };
+		9AEF35611C1F93EB0008EDD8 /* ConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF35601C1F93EB0008EDD8 /* ConfigTests.swift */; };
+		9AEF35651C1FAD460008EDD8 /* test-config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9AEF35641C1FAD460008EDD8 /* test-config.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,12 +33,14 @@
 		9A5BCD781C1DFF6C003516CF /* DocOMatKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DocOMatKit.h; sourceTree = "<group>"; };
 		9A5BCD7A1C1DFF6C003516CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9A5BCD7F1C1DFF6C003516CF /* DocOMatKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DocOMatKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9A5BCD841C1DFF6C003516CF /* DocOMatKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocOMatKitTests.swift; sourceTree = "<group>"; };
 		9A5BCD861C1DFF6C003516CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9A5BCDB01C1E021C003516CF /* HomeTabsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTabsViewController.swift; sourceTree = "<group>"; };
 		9A5BCDB21C1E029C003516CF /* HomeTabsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTabsViewModel.swift; sourceTree = "<group>"; };
 		9A5BCDB51C1E02F3003516CF /* BackendFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackendFactory.swift; sourceTree = "<group>"; };
 		9A5BCDBA1C1E05FF003516CF /* DocOMatAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocOMatAppDelegate.swift; sourceTree = "<group>"; };
+		9AEF355D1C1F92FA0008EDD8 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		9AEF35601C1F93EB0008EDD8 /* ConfigTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigTests.swift; sourceTree = "<group>"; };
+		9AEF35641C1FAD460008EDD8 /* test-config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "test-config.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +85,7 @@
 			children = (
 				9A5BCDB91C1E05D7003516CF /* App */,
 				9A5BCDB41C1E02A5003516CF /* Backend */,
+				9AEF355C1C1F927F0008EDD8 /* Config */,
 				9A5BCDAF1C1E019E003516CF /* GUI */,
 				9A5BCD781C1DFF6C003516CF /* DocOMatKit.h */,
 				9A5BCD7A1C1DFF6C003516CF /* Info.plist */,
@@ -91,7 +96,9 @@
 		9A5BCD831C1DFF6C003516CF /* DocOMatKitTests */ = {
 			isa = PBXGroup;
 			children = (
-				9A5BCD841C1DFF6C003516CF /* DocOMatKitTests.swift */,
+				9AEF35621C1F94260008EDD8 /* Backend */,
+				9AEF355F1C1F93C20008EDD8 /* Config */,
+				9AEF35631C1FAD050008EDD8 /* TestData */,
 				9A5BCD861C1DFF6C003516CF /* Info.plist */,
 			);
 			path = DocOMatKitTests;
@@ -120,6 +127,37 @@
 				9A5BCDBA1C1E05FF003516CF /* DocOMatAppDelegate.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		9AEF355C1C1F927F0008EDD8 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				9AEF355D1C1F92FA0008EDD8 /* Config.swift */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		9AEF355F1C1F93C20008EDD8 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				9AEF35601C1F93EB0008EDD8 /* ConfigTests.swift */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		9AEF35621C1F94260008EDD8 /* Backend */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Backend;
+			sourceTree = "<group>";
+		};
+		9AEF35631C1FAD050008EDD8 /* TestData */ = {
+			isa = PBXGroup;
+			children = (
+				9AEF35641C1FAD460008EDD8 /* test-config.plist */,
+			);
+			path = TestData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -220,6 +258,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AEF35651C1FAD460008EDD8 /* test-config.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,6 +271,7 @@
 			files = (
 				9A5BCDB61C1E02F3003516CF /* BackendFactory.swift in Sources */,
 				9A5BCDB11C1E021C003516CF /* HomeTabsViewController.swift in Sources */,
+				9AEF355E1C1F92FA0008EDD8 /* Config.swift in Sources */,
 				9A5BCDBB1C1E05FF003516CF /* DocOMatAppDelegate.swift in Sources */,
 				9A5BCDB31C1E029C003516CF /* HomeTabsViewModel.swift in Sources */,
 			);
@@ -241,7 +281,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9A5BCD851C1DFF6C003516CF /* DocOMatKitTests.swift in Sources */,
+				9AEF35611C1F93EB0008EDD8 /* ConfigTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
