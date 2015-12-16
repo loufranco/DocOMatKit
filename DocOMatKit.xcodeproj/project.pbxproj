@@ -11,11 +11,13 @@
 		9A5BCD801C1DFF6C003516CF /* DocOMatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A5BCD751C1DFF6C003516CF /* DocOMatKit.framework */; };
 		9A5BCDB11C1E021C003516CF /* HomeTabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDB01C1E021C003516CF /* HomeTabsViewController.swift */; };
 		9A5BCDB31C1E029C003516CF /* HomeTabsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDB21C1E029C003516CF /* HomeTabsViewModel.swift */; };
-		9A5BCDB61C1E02F3003516CF /* BackendFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDB51C1E02F3003516CF /* BackendFactory.swift */; };
+		9A5BCDB61C1E02F3003516CF /* Backend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDB51C1E02F3003516CF /* Backend.swift */; };
 		9A5BCDBB1C1E05FF003516CF /* DocOMatAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDBA1C1E05FF003516CF /* DocOMatAppDelegate.swift */; };
 		9AEF355E1C1F92FA0008EDD8 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF355D1C1F92FA0008EDD8 /* Config.swift */; };
 		9AEF35611C1F93EB0008EDD8 /* ConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF35601C1F93EB0008EDD8 /* ConfigTests.swift */; };
 		9AEF35651C1FAD460008EDD8 /* test-config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9AEF35641C1FAD460008EDD8 /* test-config.plist */; };
+		9AEF35681C204F800008EDD8 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF35671C204F800008EDD8 /* Document.swift */; };
+		9AEF356A1C2193860008EDD8 /* GitHubBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF35691C2193860008EDD8 /* GitHubBackend.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,11 +38,13 @@
 		9A5BCD861C1DFF6C003516CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9A5BCDB01C1E021C003516CF /* HomeTabsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTabsViewController.swift; sourceTree = "<group>"; };
 		9A5BCDB21C1E029C003516CF /* HomeTabsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTabsViewModel.swift; sourceTree = "<group>"; };
-		9A5BCDB51C1E02F3003516CF /* BackendFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackendFactory.swift; sourceTree = "<group>"; };
+		9A5BCDB51C1E02F3003516CF /* Backend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Backend.swift; sourceTree = "<group>"; };
 		9A5BCDBA1C1E05FF003516CF /* DocOMatAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocOMatAppDelegate.swift; sourceTree = "<group>"; };
 		9AEF355D1C1F92FA0008EDD8 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		9AEF35601C1F93EB0008EDD8 /* ConfigTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigTests.swift; sourceTree = "<group>"; };
 		9AEF35641C1FAD460008EDD8 /* test-config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "test-config.plist"; sourceTree = "<group>"; };
+		9AEF35671C204F800008EDD8 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		9AEF35691C2193860008EDD8 /* GitHubBackend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitHubBackend.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +90,7 @@
 				9A5BCDB91C1E05D7003516CF /* App */,
 				9A5BCDB41C1E02A5003516CF /* Backend */,
 				9AEF355C1C1F927F0008EDD8 /* Config */,
+				9AEF35661C204F580008EDD8 /* Document */,
 				9A5BCDAF1C1E019E003516CF /* GUI */,
 				9A5BCD781C1DFF6C003516CF /* DocOMatKit.h */,
 				9A5BCD7A1C1DFF6C003516CF /* Info.plist */,
@@ -116,7 +121,8 @@
 		9A5BCDB41C1E02A5003516CF /* Backend */ = {
 			isa = PBXGroup;
 			children = (
-				9A5BCDB51C1E02F3003516CF /* BackendFactory.swift */,
+				9A5BCDB51C1E02F3003516CF /* Backend.swift */,
+				9AEF35691C2193860008EDD8 /* GitHubBackend.swift */,
 			);
 			path = Backend;
 			sourceTree = "<group>";
@@ -158,6 +164,14 @@
 				9AEF35641C1FAD460008EDD8 /* test-config.plist */,
 			);
 			path = TestData;
+			sourceTree = "<group>";
+		};
+		9AEF35661C204F580008EDD8 /* Document */ = {
+			isa = PBXGroup;
+			children = (
+				9AEF35671C204F800008EDD8 /* Document.swift */,
+			);
+			path = Document;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,11 +283,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9A5BCDB61C1E02F3003516CF /* BackendFactory.swift in Sources */,
+				9A5BCDB61C1E02F3003516CF /* Backend.swift in Sources */,
 				9A5BCDB11C1E021C003516CF /* HomeTabsViewController.swift in Sources */,
+				9AEF35681C204F800008EDD8 /* Document.swift in Sources */,
 				9AEF355E1C1F92FA0008EDD8 /* Config.swift in Sources */,
 				9A5BCDBB1C1E05FF003516CF /* DocOMatAppDelegate.swift in Sources */,
 				9A5BCDB31C1E029C003516CF /* HomeTabsViewModel.swift in Sources */,
+				9AEF356A1C2193860008EDD8 /* GitHubBackend.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
