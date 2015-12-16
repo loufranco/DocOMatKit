@@ -9,6 +9,6 @@
 import Foundation
 
 /// Defines documents
-protocol Document {
+public protocol Document {
     
 }

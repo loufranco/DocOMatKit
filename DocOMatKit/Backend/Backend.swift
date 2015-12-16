@@ -9,23 +9,23 @@
 import Foundation
 
 /// Defines Authentication
-protocol BackendAuth {
+public protocol BackendAuth {
     func authenticate(completion: () -> (), error: (NSError) -> ())
 }
 
 /// Defines Retrieval
-protocol BackendDocRetrieval {
+public protocol BackendDocRetrieval {
     func get() -> Document
 }
 
 /// Defines Formatting
-protocol BackendDocFormatter {
+public protocol BackendDocFormatter {
     func formatAsHtml(doc: Document) -> String
 }
 
 /// An abstract factory to create objects you need to connect
 /// to a documentation back-end.
-protocol BackendFactory {
+public protocol BackendFactory {
     func makeAuth() -> BackendAuth
     func makeDocRetrieval() -> BackendDocRetrieval
     func makeDocFormatter() -> BackendDocFormatter
