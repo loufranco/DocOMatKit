@@ -8,6 +8,14 @@
 
 import Foundation
 
+public protocol ContentType {
+    
+}
+
+public protocol Content {
+    var type: ContentType { get }
+}
+
 /// Defines documents
 public protocol Document {
     

@@ -11,17 +11,10 @@ import Foundation
 /// Defines the types needed to get documentation from GitHub
 
 public struct GitHubPrivateAuth: BackendAuth {
-    public func authenticate(completion: () -> (), error: (NSError) -> ()) {
-        
+    public func authenticate(completion: ((docRetrieval: BackendDocRetrieval) -> ())?, error: ((NSError) -> ())?) {
+        error?(NSError(domain: DocOMatErrorDomain.Auth.rawValue, code: DocOMatAuthCode.Failed.rawValue, userInfo: nil))
     }
 }
-
-public struct GitHubPublicAuth: BackendAuth {
-    public func authenticate(completion: () -> (), error: (NSError) -> ()) {
-        completion()
-    }
-}
-
 
 public struct GitHubDocFormatter: BackendDocFormatter {
     public func formatAsHtml(doc: Document) -> String {
@@ -34,8 +27,14 @@ public struct GitHubDocument: Document {
 }
 
 public struct GitHubDocRetrieval: BackendDocRetrieval {
-    public func get() -> Document {
-        return GitHubDocument()
+    public let rootUrl: NSURL
+    
+    public init(rootUrl: NSURL) {
+        self.rootUrl = rootUrl
+    }
+    
+    public func getList() -> [Content] {
+        return []
     }
 }
 
@@ -48,7 +47,7 @@ public struct GitHubFactory: BackendFactory {
     }
     
     public func makeAuth() -> BackendAuth {
-        return GitHubPublicAuth()
+        return NullAuth(docRetrieval: GitHubDocRetrieval(rootUrl: rootUrl))
     }
     
     public func makeDocFormatter() -> BackendDocFormatter {
@@ -56,6 +55,6 @@ public struct GitHubFactory: BackendFactory {
     }
     
     public func makeDocRetrieval() -> BackendDocRetrieval {
-        return GitHubDocRetrieval()
+        return GitHubDocRetrieval(rootUrl: rootUrl)
     }
 }
