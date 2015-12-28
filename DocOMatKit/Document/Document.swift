@@ -8,15 +8,36 @@
 
 import Foundation
 
-public protocol ContentType {
-    
+public protocol Content {
+    var title: String { get }
 }
 
-public protocol Content {
-    var type: ContentType { get }
+public struct EmptyContent: Content {
+    public let title = ""
+}
+
+public protocol Referenceable {
+    var referenceName: String { get }
+}
+
+public struct ContentReference: Referenceable {
+    public let referenceName: String
+    public init(referenceName: String) {
+        self.referenceName = referenceName
+    }
 }
 
 /// Defines documents
-public protocol Document {
+public protocol Document: Content {
     
+}
+
+public struct MarkdownDocument: Document {
+    public let content: String
+    public let title: String
+    public init(content: String) {
+        self.content = content
+        let contentLines = self.content.componentsSeparatedByString("\n")
+        self.title = (contentLines.count > 0) ? contentLines[0] : ""
+    }
 }

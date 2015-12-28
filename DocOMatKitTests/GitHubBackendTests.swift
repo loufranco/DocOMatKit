@@ -10,6 +10,12 @@ import XCTest
 import DocOMatKit
 
 
+func XCTAssertResultSuccess<T>(result: Result<T>) {
+    if case let .Error(e) = result {
+        XCTFail("Unexpected error: \(e)")
+    }
+}
+
 class GitHubBackendTests: XCTestCase {
     
     var github: GitHubFactory!
@@ -21,20 +27,55 @@ class GitHubBackendTests: XCTestCase {
     func testPublicAuth() {
         let auth = github.makeAuth()
         var completes = false
-        auth.authenticate({ (_) -> () in
-            completes = true
-        }) { (_) -> () in
-            XCTFail("should not have an error")
+        auth.authenticate { r in
+            if case .Success = r {
+                completes = true
+            }
         }
         XCTAssert(completes)
     }
     
+    func checkRefList(list: [Referenceable]) -> Result<()> {
+        XCTAssert(list.count > 0)
+        for l in list {
+            XCTAssert(l.referenceName.hasPrefix("0"))
+        }
+        return .Success(())
+    }
     
-    func testGetList() {
-        let auth = github.makeAuth()
-        auth.authenticate({ (docRetrieval) -> () in
-            docRetrieval.getList()
-        }, error: nil)
+    func checkDocTitle(doc: Content) -> Result<()> {
+        XCTAssertNotEqual(doc.title, "")
+        return .Success(())
     }
 
+    func testGetList() {
+        let auth = github.makeAuth()
+        var completes = false
+        auth.authenticate { docRetrievalResult in
+            docRetrievalResult |> { (docRetrieval) -> Result<()> in
+                docRetrieval.getList { (listResult) -> () in
+                    XCTAssertResultSuccess(listResult |> self.checkRefList)
+                    completes = true
+                }
+                return .Success(())
+            }
+        }
+        XCTAssert(completes)
+    }
+    
+    func testGetRef() {
+        let auth = github.makeAuth()
+        var completes = false
+        auth.authenticate { docRetrievalResult in
+            docRetrievalResult |> { (docRetrieval) -> Result<()> in
+                let ref = ContentReference(referenceName: "03-about-the-license.md")
+                docRetrieval.get(ref) { doc in
+                    XCTAssertResultSuccess(doc |> self.checkDocTitle)
+                    completes = true
+                }
+                return .Success(())
+            }
+        }
+        XCTAssert(completes)
+    }
 }

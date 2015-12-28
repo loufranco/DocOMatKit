@@ -11,8 +11,8 @@ import Foundation
 /// Defines the types needed to get documentation from GitHub
 
 public struct GitHubPrivateAuth: BackendAuth {
-    public func authenticate(completion: ((docRetrieval: BackendDocRetrieval) -> ())?, error: ((NSError) -> ())?) {
-        error?(NSError(domain: DocOMatErrorDomain.Auth.rawValue, code: DocOMatAuthCode.Failed.rawValue, userInfo: nil))
+    public func authenticate(completion: Result<BackendDocRetrieval>.Fn) {
+        completion(.Error(DocOMatAuthCode.Failed.error("Private GitHub not implemented")))
     }
 }
 
@@ -22,19 +22,55 @@ public struct GitHubDocFormatter: BackendDocFormatter {
     }
 }
 
-public struct GitHubDocument: Document {
-    
-}
-
 public struct GitHubDocRetrieval: BackendDocRetrieval {
     public let rootUrl: NSURL
+    public let http: Http<NSData>
     
-    public init(rootUrl: NSURL) {
+    public init(rootUrl: NSURL, http: Http<NSData>) {
         self.rootUrl = rootUrl
+        self.http = http
+    }
+
+    private func getJson(url: NSURL, reportResult: Result<AnyObject>.Fn) {
+        self.http.get(url: url) { r in
+            r |> { try NSJSONSerialization.JSONObjectWithData($0, options: NSJSONReadingOptions(rawValue: 0)) }
+              |> reportResult
+        }
     }
     
-    public func getList() -> [Content] {
-        return []
+    private func getJsonAs<T>(url: NSURL, reportResult: Result<T>.Fn) {
+        getJson(url) { r in
+            r |> { ($0 as? T).result.normalizeError(DocOMatRetrievalCode.Parse.error("Unexpected JSON type returned")) }
+              |> reportResult
+        }
+    }
+    
+    private func jsonToContentReference(json: AnyObject) throws -> Referenceable {
+        guard let dict = json as? [String: AnyObject],
+            let name = dict["name"] as? String else {
+                throw DocOMatRetrievalCode.Parse.error()
+        }
+        return ContentReference(referenceName: name)
+    }
+    
+    public func getList(reportResult: Result<[Referenceable]>.Fn) {
+        getJsonAs(self.rootUrl) { (r: Result<[AnyObject]>) in
+            r |> { try $0.map(self.jsonToContentReference) }
+              |> reportResult
+        }
+    }
+    
+    public func get(ref: Referenceable, reportResult: Result<Content>.Fn) {
+        getJsonAs(self.rootUrl.URLByAppendingPathComponent(ref.referenceName)) { (r: Result<[String: AnyObject]>) in
+            let doc:Result<Content> =
+              r |> { ($0["content"] as? String)?.stringByReplacingOccurrencesOfString("\n", withString: "") }
+                |> { NSData(base64EncodedString: $0, options: NSDataBase64DecodingOptions(rawValue: 0)) }
+                |> { String(data: $0, encoding: NSUTF8StringEncoding) }
+                |> { MarkdownDocument(content: $0) }
+
+            doc.normalizeError(DocOMatRetrievalCode.Parse.error("Unexpected JSON returned"))
+                |> reportResult
+        }
     }
 }
 
@@ -47,7 +83,7 @@ public struct GitHubFactory: BackendFactory {
     }
     
     public func makeAuth() -> BackendAuth {
-        return NullAuth(docRetrieval: GitHubDocRetrieval(rootUrl: rootUrl))
+        return NullAuth(docRetrieval: makeDocRetrieval())
     }
     
     public func makeDocFormatter() -> BackendDocFormatter {
@@ -55,6 +91,7 @@ public struct GitHubFactory: BackendFactory {
     }
     
     public func makeDocRetrieval() -> BackendDocRetrieval {
-        return GitHubDocRetrieval(rootUrl: rootUrl)
+        let get: Http<NSData>.GetFn = httpGetDataSynchronous
+        return GitHubDocRetrieval(rootUrl: rootUrl, http: Http<NSData>(get: get))
     }
 }

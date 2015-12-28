@@ -8,18 +8,9 @@
 
 import Foundation
 
-public enum DocOMatErrorDomain: String {
-    case Auth = "DocOMatAuthErrorDomain"
-}
-
-public enum DocOMatAuthCode: Int {
-    case Failed = -1
-}
-
-
 /// Defines Authentication
 public protocol BackendAuth {
-    func authenticate(completion: ((docRetrieval: BackendDocRetrieval) -> ())?, error: ((NSError) -> ())?)
+    func authenticate(completion: Result<BackendDocRetrieval>.Fn)
 }
 
 /// An authentication object that always succeeds.
@@ -30,14 +21,15 @@ public struct NullAuth: BackendAuth {
         self.docRetrieval = docRetrieval
     }
     
-    public func authenticate(completion: ((docRetrieval: BackendDocRetrieval) -> ())?, error: ((NSError) -> ())?) {
-        completion?(docRetrieval: docRetrieval)
+    public func authenticate(completion: Result<BackendDocRetrieval>.Fn) {
+        completion(.Success(self.docRetrieval))
     }
 }
 
 /// Defines Retrieval
 public protocol BackendDocRetrieval {
-    func getList() -> [Content]
+    func getList(reportResult: Result<[Referenceable]>.Fn)
+    func get(ref: Referenceable, reportResult: Result<Content>.Fn)
 }
 
 /// Defines Formatting
