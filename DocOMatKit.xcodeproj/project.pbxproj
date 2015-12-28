@@ -10,6 +10,7 @@
 		9A25B68E1C307ADF001F7C23 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A25B68D1C307ADF001F7C23 /* Errors.swift */; };
 		9A25B6911C317864001F7C23 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A25B6901C317864001F7C23 /* Http.swift */; };
 		9A25B6931C31E174001F7C23 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A25B6921C31E174001F7C23 /* Result.swift */; };
+		9A25B6951C31E93C001F7C23 /* DocListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A25B6941C31E93C001F7C23 /* DocListViewController.swift */; };
 		9A5BCD791C1DFF6C003516CF /* DocOMatKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A5BCD781C1DFF6C003516CF /* DocOMatKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9A5BCD801C1DFF6C003516CF /* DocOMatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A5BCD751C1DFF6C003516CF /* DocOMatKit.framework */; };
 		9A5BCDB11C1E021C003516CF /* HomeTabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDB01C1E021C003516CF /* HomeTabsViewController.swift */; };
@@ -38,6 +39,7 @@
 		9A25B68D1C307ADF001F7C23 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		9A25B6901C317864001F7C23 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
 		9A25B6921C31E174001F7C23 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		9A25B6941C31E93C001F7C23 /* DocListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocListViewController.swift; sourceTree = "<group>"; };
 		9A5BCD751C1DFF6C003516CF /* DocOMatKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DocOMatKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A5BCD781C1DFF6C003516CF /* DocOMatKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DocOMatKit.h; sourceTree = "<group>"; };
 		9A5BCD7A1C1DFF6C003516CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 			children = (
 				9A5BCDB01C1E021C003516CF /* HomeTabsViewController.swift */,
 				9A5BCDB21C1E029C003516CF /* HomeTabsViewModel.swift */,
+				9A25B6941C31E93C001F7C23 /* DocListViewController.swift */,
 			);
 			path = GUI;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				9A5BCDBB1C1E05FF003516CF /* DocOMatAppDelegate.swift in Sources */,
 				9A25B6931C31E174001F7C23 /* Result.swift in Sources */,
 				9A5BCDB31C1E029C003516CF /* HomeTabsViewModel.swift in Sources */,
+				9A25B6951C31E93C001F7C23 /* DocListViewController.swift in Sources */,
 				9AEF356A1C2193860008EDD8 /* GitHubBackend.swift in Sources */,
 				9A25B6911C317864001F7C23 /* Http.swift in Sources */,
 			);
