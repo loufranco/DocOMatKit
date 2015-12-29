@@ -41,6 +41,5 @@ public protocol BackendDocFormatter {
 /// to a documentation back-end.
 public protocol BackendFactory {
     func makeAuth() -> BackendAuth
-    func makeDocRetrieval() -> BackendDocRetrieval
     func makeDocFormatter() -> BackendDocFormatter
 }

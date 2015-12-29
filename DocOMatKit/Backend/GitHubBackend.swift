@@ -90,7 +90,7 @@ public struct GitHubFactory: BackendFactory {
         return GitHubDocFormatter()
     }
     
-    public func makeDocRetrieval() -> BackendDocRetrieval {
+    private func makeDocRetrieval() -> BackendDocRetrieval {
         let get: Http<NSData>.GetFn = httpGetDataSynchronous
         return GitHubDocRetrieval(rootUrl: rootUrl, http: Http<NSData>(get: get))
     }
