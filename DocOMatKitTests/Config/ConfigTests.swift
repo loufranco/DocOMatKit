@@ -13,11 +13,11 @@ class ConfigTests: XCTestCase {
 
     func testLoadPlist() {
         let config = PListConfig(name: "test-config", bundle: NSBundle(forClass: ConfigTests.self))
-        guard let backendType = config.backendType() else {
-            XCTFail("Expect a backend type")
+        guard let backends = config.backends() else {
+            XCTFail("Expect a backend")
             return
         }
-        XCTAssertGreaterThan(backendType.characters.count, 0)
+        XCTAssertGreaterThan(backends.keyCount(), 0)
     }
 
 }

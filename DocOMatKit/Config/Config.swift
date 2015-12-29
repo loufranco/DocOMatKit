@@ -10,15 +10,16 @@ import Foundation
 
 /// A protocol that defines what a configuration must have
 public protocol Config {
-    func backendType() -> String?
     func string(key: String) -> String?
     func dict(key: String) -> Config?
+    func keyCount() -> Int
+    func backends() -> Config?
 }
 
 /// The default keys for config objects.
 extension Config {
-    public func backendType() -> String? {
-        return dict("backend")?.string("type")
+    public func backends() -> Config? {
+        return dict("backends")
     }
 }
 
@@ -43,6 +44,10 @@ extension DictConfig {
     
     public func string(key: String) -> String? {
         return configDict[key] as? String
+    }
+    
+    public func keyCount() -> Int {
+        return configDict.keys.count
     }
 }
 

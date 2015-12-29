@@ -13,7 +13,7 @@ import Foundation
     func reloadRow(row: Int)
 }
 
-protocol DocListViewModel {
+protocol DocListViewModelable {
     var title: String { get }
     func docCount() -> Int
     func docTitle(index: Int) -> String
@@ -44,12 +44,10 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let id = "DocCell"
-        var cell = tableView.dequeueReusableCellWithIdentifier(id)
-        if cell == nil {
-            cell = UITableViewCell(style: .Default, reuseIdentifier: id)
-        }
-        cell?.textLabel?.text = viewModel.docTitle(indexPath.row)
-        return cell!
+        let cell = tableView.dequeueReusableCellWithIdentifier(id) ??
+                    UITableViewCell(style: .Default, reuseIdentifier: id)
+        cell.textLabel?.text = viewModel.docTitle(indexPath.row)
+        return cell
     }
     
     func reloadData() {

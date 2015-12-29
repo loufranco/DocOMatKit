@@ -43,3 +43,17 @@ public protocol BackendFactory {
     func makeAuth() -> BackendAuth
     func makeDocFormatter() -> BackendDocFormatter
 }
+
+/// Create a factory from a configuration
+public func makeBackendFactory(config: Config?) -> BackendFactory? {
+    guard let type = config?.string("type") else {
+        return nil
+    }
+    
+    switch (type) {
+    case "GitHub":
+        return GitHubFactory(config: config)
+    default:
+        return nil
+    }
+}

@@ -2,35 +2,26 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>backend</key>
+	<key>ui</key>
 	<dict>
-		<key>type</key>
-		<string>GitHub</string>
-		<key>url</key>
-		<string>https://github.com/loufranco/DocOMatKit/docs</string>
 		<key>style</key>
-		<string>tabs</string>
-		<key>tabs</key>
+		<string>list</string>
+		<key>backends</key>
 		<array>
-			<dict>
-				<key>title</key>
-				<string>Starting</string>
-				<key>path</key>
-				<string>getting-started</string>
-			</dict>
-			<dict>
-				<key>title</key>
-				<string>Backends</string>
-				<key>path</key>
-				<string>back-ends</string>
-			</dict>
-			<dict>
-				<key>title</key>
-				<string>License</string>
-				<key>path</key>
-				<string>license</string>
-			</dict>
+			<string>doc-o-mat</string>
 		</array>
+	</dict>
+	<key>backends</key>
+	<dict>
+		<key>doc-o-mat</key>
+		<dict>
+			<key>type</key>
+			<string>GitHub</string>
+			<key>url</key>
+			<string>https://api.github.com/repos/loufranco/DocOMatKit/contents/docs</string>
+			<key>title</key>
+			<string>Doc-o-Mat Kit</string>
+		</dict>
 	</dict>
 </dict>
 </plist>

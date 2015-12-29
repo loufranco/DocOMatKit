@@ -76,10 +76,18 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
 
 public struct GitHubFactory: BackendFactory {
     
-    public let rootUrl: NSURL
+    public let rootUrl: NSURL!
     
     public init(rootUrl: NSURL) {
         self.rootUrl = rootUrl
+    }
+    
+    public init?(config: Config?) {
+        guard let urlString = config?.string("url") else {
+            self.rootUrl = nil
+            return nil
+        }
+        self.rootUrl = NSURL(string: urlString)
     }
     
     public func makeAuth() -> BackendAuth {
