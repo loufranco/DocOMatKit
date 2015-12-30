@@ -14,6 +14,13 @@ public protocol Referenceable {
     func get(reportResult: Result<Content>.Fn)
 }
 
+public struct NullContentReference: Referenceable {
+    public let referenceName: String = ""
+    public func get(reportResult: Result<Content>.Fn) {
+        reportResult(Result<Content>.Success(EmptyContent()))
+    }
+}
+
 public struct ContentReference: Referenceable {
     public let docRetrieval: BackendDocRetrieval
     public let referenceName: String
@@ -31,14 +38,22 @@ public struct ContentReference: Referenceable {
 public protocol Content {
     var title: String { get }
     var content: String { get }
-    func getChildren() -> [Referenceable]
+    var reference: Referenceable { get }
+    
+    func getChildren(reportResult: Result<[Referenceable]>.Fn)
 }
 
 public struct EmptyContent: Content {
     public let title = ""
     public let content = ""
-    public func getChildren() -> [Referenceable] {
-        return []
+    public var reference: Referenceable
+    
+    public init() {
+        self.reference = NullContentReference()
+    }
+    
+    public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
+        reportResult(Result<[Referenceable]>.Success([]))
     }
 }
 
@@ -46,13 +61,16 @@ public struct EmptyContent: Content {
 public struct ContentFolder: Content {
     public let title: String
     public let content: String
-    public func getChildren() -> [Referenceable] {
-        return []
+    public let reference: Referenceable
+    
+    public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
+        reportResult(Result<[Referenceable]>.Success([]))
     }
     
-    public init(title: String, content: String) {
+    public init(title: String, content: String, reference: Referenceable) {
         self.title = title
         self.content = content
+        self.reference = reference
     }
 }
 
@@ -62,18 +80,20 @@ public protocol Document: Content {
 }
 
 public extension Document {
-    public func getChildren() -> [Referenceable] {
-        return []
+    public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
+        reportResult(Result<[Referenceable]>.Success([]))
     }
 }
 
 public struct MarkdownDocument: Document {
     public let content: String
     public let title: String
+    public let reference: Referenceable
     
-    public init(content: String) {
+    public init(content: String, reference: Referenceable) {
         self.content = content
         let contentLines = self.content.componentsSeparatedByString("\n")
         self.title = (contentLines.count > 0) ? contentLines[0] : ""
+        self.reference = reference
     }
 }

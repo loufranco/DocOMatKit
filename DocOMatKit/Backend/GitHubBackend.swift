@@ -74,7 +74,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
               r |> { ($0["content"] as? String)?.stringByReplacingOccurrencesOfString("\n", withString: "") }
                 |> { NSData(base64EncodedString: $0, options: NSDataBase64DecodingOptions(rawValue: 0)) }
                 |> { String(data: $0, encoding: NSUTF8StringEncoding) }
-                |> { MarkdownDocument(content: $0) }
+                |> { MarkdownDocument(content: $0, reference: ref) }
 
             doc.normalizeError(DocOMatRetrievalCode.Parse.error("Unexpected JSON returned"))
                 |> reportResult
