@@ -40,7 +40,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     
     private func getJsonAs<T>(url: NSURL, reportResult: Result<T>.Fn) {
         getJson(url) { r in
-            r |> { ($0 as? T).result.normalizeError(DocOMatRetrievalCode.Parse.error("Unexpected JSON type returned")) }
+            r |> { ($0 as? T).result.normalizeError(DocOMatRetrievalCode.Parse.error("Unexpected JSON type returned: [\($0)]")) }
                 |> reportResult
         }
     }
@@ -83,7 +83,13 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
         Result<String>((response["content"] as? String)?.stringByReplacingOccurrencesOfString("\n", withString: ""))
             |> { NSData(base64EncodedString: $0, options: NSDataBase64DecodingOptions(rawValue: 0)) }
             |> { String(data: $0, encoding: NSUTF8StringEncoding) }
-            |> { MarkdownDocument(content: $0, reference: ref) as Content }
+            |> { (content: String) -> Content in
+                if ref.referenceName.hasSuffix(".md") {
+                    return MarkdownDocument(content: content, reference: ref)
+                } else {
+                    return UnknownFile(title: ref.referenceName, content: content, reference: ref)
+                }
+            }
         
         return doc.normalizeError(DocOMatRetrievalCode.Parse.error("Unexpected JSON returned"))
     }
