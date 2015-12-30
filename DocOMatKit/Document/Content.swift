@@ -75,17 +75,17 @@ public struct ContentFolder: Content {
 }
 
 /// Defines documents
-public protocol Document: Content {
+public protocol File: Content {
     
 }
 
-public extension Document {
+public extension File {
     public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
         reportResult(Result<[Referenceable]>.Success([]))
     }
 }
 
-public struct MarkdownDocument: Document {
+public struct MarkdownDocument: File {
     public let content: String
     public let title: String
     public let reference: Referenceable

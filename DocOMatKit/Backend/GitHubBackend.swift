@@ -17,7 +17,7 @@ public struct GitHubPrivateAuth: BackendAuth {
 }
 
 public struct GitHubDocFormatter: BackendDocFormatter {
-    public func formatAsHtml(doc: Document) -> String {
+    public func formatAsHtml(doc: File) -> String {
         return ""
     }
 }
@@ -30,18 +30,18 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
         self.rootUrl = rootUrl
         self.http = http
     }
-
+    
     private func getJson(url: NSURL, reportResult: Result<AnyObject>.Fn) {
         self.http.get(url: url) { r in
             r |> { try NSJSONSerialization.JSONObjectWithData($0, options: NSJSONReadingOptions(rawValue: 0)) }
-              |> reportResult
+                |> reportResult
         }
     }
     
     private func getJsonAs<T>(url: NSURL, reportResult: Result<T>.Fn) {
         getJson(url) { r in
             r |> { ($0 as? T).result.normalizeError(DocOMatRetrievalCode.Parse.error("Unexpected JSON type returned")) }
-              |> reportResult
+                |> reportResult
         }
     }
     
@@ -56,7 +56,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     func getList(url: NSURL, reportResult: Result<[Referenceable]>.Fn) {
         getJsonAs(url) { (r: Result<[AnyObject]>) in
             r |> { try $0.map(self.jsonToContentReference) }
-              |> reportResult
+                |> reportResult
         }
     }
     
@@ -68,16 +68,42 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
         getList(self.rootUrl.URLByAppendingPathComponent(ref.referenceName), reportResult: reportResult)
     }
     
+    private func parseDir(ref: Referenceable, response: [String: AnyObject]) -> Result<Content> {
+        guard
+            let name = response["name"] as? String,
+            let path = response["path"] as? String
+            else {
+                return .Error(DocOMatRetrievalCode.Parse.error("name or path not found in response: \(response)"))
+        }
+        return .Success(ContentFolder(title: name, content: path, reference: ref))
+    }
+
+    private func parseFile(ref: Referenceable, response: [String: AnyObject]) -> Result<Content> {
+        let doc =
+        Result<String>((response["content"] as? String)?.stringByReplacingOccurrencesOfString("\n", withString: ""))
+            |> { NSData(base64EncodedString: $0, options: NSDataBase64DecodingOptions(rawValue: 0)) }
+            |> { String(data: $0, encoding: NSUTF8StringEncoding) }
+            |> { MarkdownDocument(content: $0, reference: ref) as Content }
+        
+        return doc.normalizeError(DocOMatRetrievalCode.Parse.error("Unexpected JSON returned"))
+    }
+    
+    private func parseContentResponse(ref: Referenceable, response: [String: AnyObject]) -> Result<Content> {
+        switch (response["type"] as? String) {
+        case .None:
+            return .Error(DocOMatRetrievalCode.Parse.error("Unexpected JSON returned"))
+        case .Some("dir"):
+            return parseDir(ref, response: response)
+        case .Some("file"):
+            return parseFile(ref, response: response)
+        case .Some(let type):
+            return .Error(DocOMatRetrievalCode.Parse.error("Unexpected type [\(type)] returned"))
+        }
+    }
+    
     public func get(ref: Referenceable, reportResult: Result<Content>.Fn) {
         getJsonAs(self.rootUrl.URLByAppendingPathComponent(ref.referenceName)) { (r: Result<[String: AnyObject]>) in
-            let doc:Result<Content> =
-              r |> { ($0["content"] as? String)?.stringByReplacingOccurrencesOfString("\n", withString: "") }
-                |> { NSData(base64EncodedString: $0, options: NSDataBase64DecodingOptions(rawValue: 0)) }
-                |> { String(data: $0, encoding: NSUTF8StringEncoding) }
-                |> { MarkdownDocument(content: $0, reference: ref) }
-
-            doc.normalizeError(DocOMatRetrievalCode.Parse.error("Unexpected JSON returned"))
-                |> reportResult
+            r |> { self.parseContentResponse(ref, response: $0) } |> reportResult
         }
     }
 }

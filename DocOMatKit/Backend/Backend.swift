@@ -35,7 +35,7 @@ public protocol BackendDocRetrieval {
 
 /// Defines Formatting
 public protocol BackendDocFormatter {
-    func formatAsHtml(doc: Document) -> String
+    func formatAsHtml(doc: File) -> String
 }
 
 /// An abstract factory to create objects you need to connect
