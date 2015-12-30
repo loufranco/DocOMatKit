@@ -66,6 +66,13 @@ public enum Result<T> {
             return .Error(e)
         }
     }
+
+    public func onError(f: (ErrorType) -> ()) -> Result<T> {
+        if case let .Error(e) = self {
+            f(e)
+        }
+        return self
+    }
     
     public init(_ t: T?, error: ErrorType) {
         if let t = t {
@@ -114,6 +121,11 @@ public func |><A, B> (left: Result<A>, right: (A) -> B?) -> Result<B> {
 
 public func |><A> (left: Result<A>, right: Result<A>.Fn) -> () {
     return right(left)
+}
+
+infix operator !!> { associativity left precedence 140 }
+public func !!><A> (left: Result<A>, right: (ErrorType) -> ()) -> Result<A> {
+    return left.onError(right)
 }
 
 public extension Optional {
