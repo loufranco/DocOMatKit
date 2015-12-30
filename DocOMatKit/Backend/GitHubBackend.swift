@@ -24,25 +24,11 @@ public struct GitHubDocFormatter: BackendDocFormatter {
 
 public struct GitHubDocRetrieval: BackendDocRetrieval {
     public let rootUrl: NSURL
-    public let http: Http<NSData>
+    public let http: Http
     
-    public init(rootUrl: NSURL, http: Http<NSData>) {
+    public init(rootUrl: NSURL, http: Http) {
         self.rootUrl = rootUrl
         self.http = http
-    }
-    
-    private func getJson(url: NSURL, reportResult: Result<AnyObject>.Fn) {
-        self.http.get(url: url) { r in
-            r |> { try NSJSONSerialization.JSONObjectWithData($0, options: NSJSONReadingOptions(rawValue: 0)) }
-                |> reportResult
-        }
-    }
-    
-    private func getJsonAs<T>(url: NSURL, reportResult: Result<T>.Fn) {
-        getJson(url) { r in
-            r |> { ($0 as? T).result.normalizeError(DocOMatRetrievalCode.Parse.error("Unexpected JSON type returned: [\($0)]")) }
-                |> reportResult
-        }
     }
     
     private func jsonToContentReference(json: AnyObject) throws -> Referenceable {
@@ -62,7 +48,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     }
     
     func getList(url: NSURL, reportResult: Result<[Referenceable]>.Fn) {
-        getJsonAs(url) { (r: Result<[AnyObject]>) in
+        http.getJsonAs(url) { (r: Result<[AnyObject]>) in
             r |> { try $0.map(self.jsonToContentReference) }
                 |> reportResult
         }
@@ -116,7 +102,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     }
     
     public func get(ref: Referenceable, reportResult: Result<Content>.Fn) {
-        getJsonAs(self.rootUrl.URLByAppendingPathComponent(ref.referenceName)) { (r: Result<[String: AnyObject]>) in
+        http.getJsonAs(self.rootUrl.URLByAppendingPathComponent(ref.referenceName)) { (r: Result<[String: AnyObject]>) in
             r |> { self.parseContentResponse(ref, response: $0) } |> reportResult
         }
     }
@@ -151,7 +137,6 @@ public struct GitHubFactory: BackendFactory {
     }
     
     private func makeDocRetrieval() -> BackendDocRetrieval {
-        let get: Http<NSData>.GetFn = httpGetDataSynchronous
-        return GitHubDocRetrieval(rootUrl: rootUrl, http: Http<NSData>(get: get))
+        return GitHubDocRetrieval(rootUrl: rootUrl, http: HttpSynchronous())
     }
 }
