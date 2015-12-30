@@ -47,10 +47,18 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     
     private func jsonToContentReference(json: AnyObject) throws -> Referenceable {
         guard let dict = json as? [String: AnyObject],
-            let name = dict["name"] as? String else {
-                throw DocOMatRetrievalCode.Parse.error()
+            let name = dict["name"] as? String,
+            let type = dict["type"] as? String else {
+                throw DocOMatRetrievalCode.Parse.error("Unexpected JSON returned: \(json)")
         }
-        return ContentReference(docRetrieval: self, referenceName: name)
+        switch (type) {
+        case "file":
+            return ContentReference(docRetrieval: self, referenceName: name)
+        case "dir":
+            return FolderReference(docRetrieval: self, referenceName: name)
+        default:
+            throw DocOMatRetrievalCode.Parse.error("Unexpected JSON returned: [\(dict)]")
+        }
     }
     
     func getList(url: NSURL, reportResult: Result<[Referenceable]>.Fn) {
@@ -111,6 +119,10 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
         getJsonAs(self.rootUrl.URLByAppendingPathComponent(ref.referenceName)) { (r: Result<[String: AnyObject]>) in
             r |> { self.parseContentResponse(ref, response: $0) } |> reportResult
         }
+    }
+    
+    public func getAsFolder(ref: Referenceable, reportResult: Result<Content>.Fn) {
+        reportResult(.Success(ContentFolder(title: ref.referenceName, content: ref.referenceName, reference: ref)))
     }
 }
 

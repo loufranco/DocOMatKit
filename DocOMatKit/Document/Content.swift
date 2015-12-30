@@ -35,6 +35,20 @@ public struct ContentReference: Referenceable {
     }
 }
 
+public struct FolderReference: Referenceable {
+    public let docRetrieval: BackendDocRetrieval
+    public let referenceName: String
+    
+    public init(docRetrieval: BackendDocRetrieval, referenceName: String) {
+        self.docRetrieval = docRetrieval
+        self.referenceName = referenceName
+    }
+    
+    public func get(reportResult: Result<Content>.Fn) {
+        self.docRetrieval.getAsFolder(self, reportResult: reportResult)
+    }
+}
+
 public protocol Content {
     var title: String { get }
     var content: String { get }
