@@ -42,11 +42,17 @@ public class DocListViewModel: DocListViewModelable {
         self.delegate?.reloadData()
         for i in 0..<list.count {
             list[i].get() { [weak self] docResult in
-                docResult |> { (doc) -> Result<()> in
+                (docResult
+                    |> { (doc: Content) -> Result<()> in
                     guard let strongSelf = self else { return .Success(()) }
                     strongSelf.docs?[i] = doc
                     strongSelf.delegate?.reloadRow(i)
                     return .Success(())
+                })
+                .onError() { (e: ErrorType) in
+                    guard let strongSelf = self else { return }
+                    strongSelf.docs?[i] = ErrorContent(error: e, reference: list[i])
+                    strongSelf.delegate?.reloadRow(i)
                 }
             }
         }
