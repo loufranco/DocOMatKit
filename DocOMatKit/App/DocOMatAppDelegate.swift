@@ -8,6 +8,34 @@
 
 import Foundation
 
+public class SplitViewController: UISplitViewController, UISplitViewControllerDelegate {
+    
+    let viewModel: DocListViewModelable!
+    
+    public init(viewModel: DocListViewModelable) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+        
+        self.delegate = self
+        prepareViews()
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        self.viewModel = nil
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func prepareViews() {
+        let docListVC = DocListViewController(viewModel: self.viewModel)
+        let docVC = UIViewController()
+        docVC.navigationItem.leftItemsSupplementBackButton = true
+        docVC.navigationItem.leftBarButtonItem = self.displayModeButtonItem()
+        self.viewControllers = [
+            UINavigationController(rootViewController: docListVC),
+            UINavigationController(rootViewController: docVC)]
+    }
+}
+
 public class DocOMatAppDelegate: UIResponder, UIApplicationDelegate {
     public var window: UIWindow?
     
@@ -18,9 +46,8 @@ public class DocOMatAppDelegate: UIResponder, UIApplicationDelegate {
         guard let vm = DocListViewModel(config: config.backends()?.dict("doc-o-mat")) else {
             return false
         }
-        let vc = DocListViewController(viewModel: vm)
-        let nc = UINavigationController(rootViewController: vc)
-        self.window?.rootViewController = nc
+        
+        self.window?.rootViewController = SplitViewController(viewModel: vm)
         self.window?.makeKeyAndVisible()
 
         return true

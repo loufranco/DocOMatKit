@@ -21,7 +21,7 @@
 		9AEF355E1C1F92FA0008EDD8 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF355D1C1F92FA0008EDD8 /* Config.swift */; };
 		9AEF35611C1F93EB0008EDD8 /* ConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF35601C1F93EB0008EDD8 /* ConfigTests.swift */; };
 		9AEF35651C1FAD460008EDD8 /* test-config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9AEF35641C1FAD460008EDD8 /* test-config.plist */; };
-		9AEF35681C204F800008EDD8 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF35671C204F800008EDD8 /* Document.swift */; };
+		9AEF35681C204F800008EDD8 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF35671C204F800008EDD8 /* Content.swift */; };
 		9AEF356A1C2193860008EDD8 /* GitHubBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF35691C2193860008EDD8 /* GitHubBackend.swift */; };
 		9AEF356C1C2195D70008EDD8 /* GitHubBackendTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEF356B1C2195D70008EDD8 /* GitHubBackendTests.swift */; };
 /* End PBXBuildFile section */
@@ -54,7 +54,7 @@
 		9AEF355D1C1F92FA0008EDD8 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		9AEF35601C1F93EB0008EDD8 /* ConfigTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigTests.swift; sourceTree = "<group>"; };
 		9AEF35641C1FAD460008EDD8 /* test-config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "test-config.plist"; sourceTree = "<group>"; };
-		9AEF35671C204F800008EDD8 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		9AEF35671C204F800008EDD8 /* Content.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
 		9AEF35691C2193860008EDD8 /* GitHubBackend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitHubBackend.swift; sourceTree = "<group>"; };
 		9AEF356B1C2195D70008EDD8 /* GitHubBackendTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitHubBackendTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -203,7 +203,7 @@
 		9AEF35661C204F580008EDD8 /* Document */ = {
 			isa = PBXGroup;
 			children = (
-				9AEF35671C204F800008EDD8 /* Document.swift */,
+				9AEF35671C204F800008EDD8 /* Content.swift */,
 			);
 			path = Document;
 			sourceTree = "<group>";
@@ -319,7 +319,7 @@
 			files = (
 				9A5BCDB61C1E02F3003516CF /* Backend.swift in Sources */,
 				9A5BCDB11C1E021C003516CF /* HomeTabsViewController.swift in Sources */,
-				9AEF35681C204F800008EDD8 /* Document.swift in Sources */,
+				9AEF35681C204F800008EDD8 /* Content.swift in Sources */,
 				9AEF355E1C1F92FA0008EDD8 /* Config.swift in Sources */,
 				9A25B68E1C307ADF001F7C23 /* Errors.swift in Sources */,
 				9A5BCDBB1C1E05FF003516CF /* DocOMatAppDelegate.swift in Sources */,

@@ -50,14 +50,22 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
             let name = dict["name"] as? String else {
                 throw DocOMatRetrievalCode.Parse.error()
         }
-        return ContentReference(referenceName: name)
+        return ContentReference(docRetrieval: self, referenceName: name)
     }
     
-    public func getList(reportResult: Result<[Referenceable]>.Fn) {
-        getJsonAs(self.rootUrl) { (r: Result<[AnyObject]>) in
+    func getList(url: NSURL, reportResult: Result<[Referenceable]>.Fn) {
+        getJsonAs(url) { (r: Result<[AnyObject]>) in
             r |> { try $0.map(self.jsonToContentReference) }
               |> reportResult
         }
+    }
+    
+    public func getList(reportResult: Result<[Referenceable]>.Fn) {
+        getList(self.rootUrl, reportResult: reportResult)
+    }
+    
+    public func getList(ref: Referenceable, reportResult: Result<[Referenceable]>.Fn) {
+        getList(self.rootUrl.URLByAppendingPathComponent(ref.referenceName), reportResult: reportResult)
     }
     
     public func get(ref: Referenceable, reportResult: Result<Content>.Fn) {

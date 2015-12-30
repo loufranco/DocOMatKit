@@ -11,9 +11,10 @@ import Foundation
 public class DocListViewModel: DocListViewModelable {
     
     let config: Config?
-    let title: String
     let factory: BackendFactory!
     var docs: [Content]?
+    
+    public let title: String
     
     weak var delegate: DocListViewModelDelegate?
     
@@ -40,7 +41,7 @@ public class DocListViewModel: DocListViewModelable {
         self.docs = Array<Content>.init(count: list.count, repeatedValue: EmptyContent())
         self.delegate?.reloadData()
         for i in 0..<list.count {
-            docRetrieval.get(list[i]) { [weak self] docResult in
+            list[i].get() { [weak self] docResult in
                 docResult |> { (doc) -> Result<()> in
                     guard let strongSelf = self else { return .Success(()) }
                     strongSelf.docs?[i] = doc
@@ -52,15 +53,19 @@ public class DocListViewModel: DocListViewModelable {
         return .Success(())
     }
     
-    func docCount() -> Int {
+    public func docCount() -> Int {
         return self.docs?.count ?? 0
     }
     
-    func docTitle(index: Int) -> String {
+    public func docTitle(index: Int) -> String {
         return self.docs?[index].title ?? ""
     }
     
-    func connect(delegate: DocListViewModelDelegate) {
+    public func docContent(index: Int) -> String {
+        return self.docs?[index].content ?? ""
+    }
+    
+    public func connect(delegate: DocListViewModelDelegate) {
         self.delegate = delegate
     }
 }

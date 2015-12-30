@@ -8,23 +8,25 @@
 
 import Foundation
 
-@objc protocol DocListViewModelDelegate {
+@objc
+public protocol DocListViewModelDelegate {
     func reloadData()
     func reloadRow(row: Int)
 }
 
-protocol DocListViewModelable {
+public protocol DocListViewModelable {
     var title: String { get }
     func docCount() -> Int
     func docTitle(index: Int) -> String
+    func docContent(index: Int) -> String
     func connect(delegate: DocListViewModelDelegate)
 }
 
 class DocListViewController: UITableViewController, DocListViewModelDelegate {
     
-    let viewModel: DocListViewModel
+    let viewModel: DocListViewModelable
     
-    init(viewModel: DocListViewModel) {
+    init(viewModel: DocListViewModelable) {
         self.viewModel = viewModel
         super.init(style: .Plain)
         self.title = viewModel.title

@@ -68,8 +68,8 @@ class GitHubBackendTests: XCTestCase {
         var completes = false
         auth.authenticate { docRetrievalResult in
             docRetrievalResult |> { (docRetrieval) -> Result<()> in
-                let ref = ContentReference(referenceName: "03-about-the-license.md")
-                docRetrieval.get(ref) { doc in
+                let ref = ContentReference(docRetrieval: docRetrieval, referenceName: "03-about-the-license.md")
+                ref.get() { doc in
                     XCTAssertResultSuccess(doc |> self.checkDocTitle)
                     completes = true
                 }

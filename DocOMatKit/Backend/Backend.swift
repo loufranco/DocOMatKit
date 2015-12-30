@@ -29,6 +29,7 @@ public struct NullAuth: BackendAuth {
 /// Defines Retrieval
 public protocol BackendDocRetrieval {
     func getList(reportResult: Result<[Referenceable]>.Fn)
+    func getList(ref: Referenceable, reportResult: Result<[Referenceable]>.Fn)
     func get(ref: Referenceable, reportResult: Result<Content>.Fn)
 }
 
