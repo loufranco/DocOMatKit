@@ -25,7 +25,7 @@ public struct ContentReference: Referenceable {
     public let docRetrieval: BackendDocRetrieval
     public let referenceName: String
 
-    public init(docRetrieval: BackendDocRetrieval,referenceName: String) {
+    public init(docRetrieval: BackendDocRetrieval, referenceName: String) {
         self.docRetrieval = docRetrieval
         self.referenceName = referenceName
     }
@@ -50,6 +50,22 @@ public struct EmptyContent: Content {
     
     public init() {
         self.reference = NullContentReference()
+    }
+    
+    public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
+        reportResult(Result<[Referenceable]>.Success([]))
+    }
+}
+
+public struct ErrorContent: Content {
+    public let title: String
+    public let content = ""
+    public var reference: Referenceable
+    
+    public init(error: ErrorType, reference: Referenceable) {
+        let nsError = error as NSError
+        self.title = nsError.localizedDescription
+        self.reference = reference
     }
     
     public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
@@ -86,14 +102,26 @@ public extension File {
 }
 
 public struct MarkdownDocument: File {
-    public let content: String
     public let title: String
+    public let content: String
     public let reference: Referenceable
     
     public init(content: String, reference: Referenceable) {
         self.content = content
         let contentLines = self.content.componentsSeparatedByString("\n")
         self.title = (contentLines.count > 0) ? contentLines[0] : ""
+        self.reference = reference
+    }
+}
+
+public struct UnknownFile: File {
+    public let title: String
+    public let content: String
+    public let reference: Referenceable
+    
+    public init(title: String, content: String, reference: Referenceable) {
+        self.title = title
+        self.content = content
         self.reference = reference
     }
 }
