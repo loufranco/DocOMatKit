@@ -29,6 +29,16 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     public init(rootUrl: NSURL, http: Http) {
         self.rootUrl = rootUrl
         self.http = http
+        self.http.makeErrFn = makeGitHubError
+    }
+    
+    public func makeGitHubError(response: [String: AnyObject]?) -> ErrorType {
+        switch (response?["message"] as? String) {
+        case .Some(let msg):
+            return DocOMatRetrievalCode.Parse.error(msg)
+        default:
+            return DocOMatRetrievalCode.Parse.error("Unexpected JSON returned: \(response)")
+        }
     }
     
     private func jsonToContentReference(json: AnyObject) throws -> Referenceable {
@@ -92,7 +102,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     private func parseContentResponse(ref: Referenceable, response: [String: AnyObject]) -> Result<Content> {
         switch (response["type"] as? String) {
         case .None:
-            return .Error(DocOMatRetrievalCode.Parse.error("Unexpected JSON returned"))
+            return .Error(makeGitHubError(response))
         case .Some("dir"):
             return parseDir(ref, response: response)
         case .Some("file"):
@@ -115,7 +125,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
 
 public struct GitHubFactory: BackendFactory {
     
-    public let rootUrl: NSURL!
+    let rootUrl: NSURL!
     
     public init(rootUrl: NSURL) {
         self.rootUrl = rootUrl

@@ -8,11 +8,16 @@
 
 import Foundation
 
+public typealias MakeErrFn = ([String: AnyObject]?) -> ErrorType
+
 public protocol Http {
     func get(url: NSURL, reportResult: Result<NSData>.Fn) -> ()
     func getJson(url: NSURL, reportResult: Result<AnyObject>.Fn)
     func getJsonAs<T>(url: NSURL, reportResult: Result<T>.Fn)
+
+    var makeErrFn: MakeErrFn { get set }
 }
+
 
 extension Http {
     public func getJson(url: NSURL, reportResult: Result<AnyObject>.Fn) {
@@ -24,16 +29,33 @@ extension Http {
     
     public func getJsonAs<T>(url: NSURL, reportResult: Result<T>.Fn) {
         getJson(url) { r in
-            r |> { ($0 as? T).result.normalizeError(DocOMatRetrievalCode.Parse.error("Unexpected JSON type returned: [\($0)]")) }
+            r |> { ($0 as? T).result.normalizeError(self.makeErrFn($0 as? [String : AnyObject])) }
                 |> reportResult
         }
     }
 }
 
 public struct HttpSynchronous: Http {
+    public let extraQueryItems: [NSURLQueryItem]?
+    public var makeErrFn: MakeErrFn
+    
+    public init(extraQueryItems: [NSURLQueryItem]?) {
+        self.extraQueryItems = extraQueryItems
+        self.makeErrFn = { _ in
+            return DocOMatRetrievalCode.Parse.error("Unexpected JSON returned")
+        }
+    }
+    
+    public init() {
+        self.init(extraQueryItems: nil)
+    }
+    
     public func get(url: NSURL, reportResult: Result<NSData>.Fn) -> () {
-        guard let data = NSData(contentsOfURL: url) else {
-            return Result<NSData>.Error(DocOMatRetrievalCode.Load.error("Could not get contents of \(url)")) |> reportResult
+        let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)
+        components?.queryItems = (components?.queryItems ?? []) + (self.extraQueryItems ?? [])
+        
+        guard let url = components?.URL, let data = NSData(contentsOfURL: url) else {
+            return Result<NSData>.Error(DocOMatRetrievalCode.Load.error("Could not get contents of \(components)")) |> reportResult
         }
         Result<NSData>(data) |> reportResult
     }
