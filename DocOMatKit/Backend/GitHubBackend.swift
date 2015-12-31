@@ -11,8 +11,8 @@ import Foundation
 /// Defines the types needed to get documentation from GitHub
 
 public struct GitHubPrivateAuth: BackendAuth {
-    public func authenticate(completion: Result<BackendDocRetrieval>.Fn) {
-        completion(.Error(DocOMatAuthCode.Failed.error("Private GitHub not implemented")))
+    public func authenticate(reportResult: Result<BackendDocRetrieval>.Fn) {
+        reportResult(.Error(DocOMatAuthCode.Failed.error("Private GitHub not implemented")))
     }
 }
 

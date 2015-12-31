@@ -10,7 +10,7 @@ import Foundation
 
 /// Defines Authentication
 public protocol BackendAuth {
-    func authenticate(completion: Result<BackendDocRetrieval>.Fn)
+    func authenticate(reportResult: Result<BackendDocRetrieval>.Fn)
 }
 
 /// An authentication object that always succeeds.
@@ -21,8 +21,8 @@ public struct NullAuth: BackendAuth {
         self.docRetrieval = docRetrieval
     }
     
-    public func authenticate(completion: Result<BackendDocRetrieval>.Fn) {
-        completion(.Success(self.docRetrieval))
+    public func authenticate(reportResult: Result<BackendDocRetrieval>.Fn) {
+        reportResult(.Success(self.docRetrieval))
     }
 }
 
