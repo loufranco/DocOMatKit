@@ -10,8 +10,8 @@ import Foundation
 
 /// A protocol that defines what a configuration must have
 public protocol Config {
-    func string(key: String) -> String?
-    func dict(key: String) -> Config?
+    func string(key: String?) -> String?
+    func dict(key: String?) -> Config?
     func keyCount() -> Int
     func backends() -> Config?
 }
@@ -35,14 +35,16 @@ public struct ConfigWithDictionary: DictConfig {
 
 /// The default behavior of any config that uses a dictionary
 extension DictConfig {
-    public func dict(key: String) -> Config? {
+    public func dict(key: String?) -> Config? {
+        guard let key = key else { return nil }
         if let d = (configDict[key] as? [String: AnyObject]) {
             return ConfigWithDictionary(configDict: d)
         }
         return nil
     }
     
-    public func string(key: String) -> String? {
+    public func string(key: String?) -> String? {
+        guard let key = key else { return nil }
         return configDict[key] as? String
     }
     
@@ -61,7 +63,7 @@ public extension PListConfig {
     init(name: String, bundle: NSBundle) {
         if let path = bundle.pathForResource(name, ofType: "plist"),
             let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
-            configDict = dict
+                configDict = dict
         } else {
             configDict = [:]
         }
