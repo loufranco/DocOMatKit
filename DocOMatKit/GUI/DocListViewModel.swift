@@ -25,16 +25,6 @@ public class DocListViewModel: DocListViewModelable {
         guard let _ = self.factory else {
             return nil
         }
-        
-        self.factory.makeAuth().authenticate { docRetrievalResult in
-            docRetrievalResult |> { (docRetrieval) -> Result<()> in
-                docRetrieval.getList { [weak self] (listResult) -> () in
-                    guard let strongSelf = self else { return }
-                    listResult |> strongSelf.loadDocs(docRetrieval)
-                }
-                return .Success(())
-            }
-        }
     }
     
     private func loadDocs(docRetrieval: BackendDocRetrieval)(list: [Referenceable]) -> Result<()> {
@@ -73,5 +63,18 @@ public class DocListViewModel: DocListViewModelable {
     
     public func connect(delegate: DocListViewModelDelegate) {
         self.delegate = delegate
+        
+        self.factory.makeAuth().authenticate { [weak self] docRetrievalResult in
+            guard let strongSelf = self else { return }
+            docRetrievalResult |> { (docRetrieval) -> Result<()> in
+                docRetrieval.getList { [weak self] (listResult) -> () in
+                    guard let strongSelf = self else { return }
+                    listResult |> strongSelf.loadDocs(docRetrieval)
+                    listResult.onError() { e in strongSelf.delegate?.reportError(e as NSError) }
+                }
+                return .Success(())
+            }
+            docRetrievalResult.onError() { e in strongSelf.delegate?.reportError(e as NSError) }
+        }
     }
 }

@@ -12,6 +12,7 @@ import Foundation
 public protocol DocListViewModelDelegate {
     func reloadData()
     func reloadRow(row: Int)
+    func reportError(e: NSError)
 }
 
 public protocol DocListViewModelable {
@@ -25,6 +26,7 @@ public protocol DocListViewModelable {
 class DocListViewController: UITableViewController, DocListViewModelDelegate {
     
     let viewModel: DocListViewModelable
+    var unreportedError: NSError? = nil
     
     init(viewModel: DocListViewModelable) {
         self.viewModel = viewModel
@@ -34,6 +36,19 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.viewModel.connect(self)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        if let e = self.unreportedError {
+            self.unreportedError = nil
+            reportError(e)
+        }
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -58,5 +73,15 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
     
     func reloadRow(row: Int) {
         self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: row, inSection: 0)], withRowAnimation: .Automatic)
+    }
+    
+    func reportError(e: NSError) {
+        if let _ = self.view.superview {
+            let alert = UIAlertController(title: "Error", message: e.localizedDescription, preferredStyle: .Alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        } else {
+            self.unreportedError = e
+        }
     }
 }
