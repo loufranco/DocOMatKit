@@ -12,6 +12,13 @@ import Foundation
 public protocol Referenceable {
     var referenceName: String { get }
     func get(reportResult: Result<Content>.Fn)
+    func canHaveChildren() -> Bool
+}
+
+extension Referenceable {
+    public func canHaveChildren() -> Bool {
+        return false
+    }
 }
 
 public struct NullContentReference: Referenceable {
@@ -47,6 +54,10 @@ public struct FolderReference: Referenceable {
     public func get(reportResult: Result<Content>.Fn) {
         self.docRetrieval.getAsFolder(self, reportResult: reportResult)
     }
+    
+    public func canHaveChildren() -> Bool {
+        return true
+    }
 }
 
 public protocol Content {
@@ -55,6 +66,13 @@ public protocol Content {
     var reference: Referenceable { get }
     
     func getChildren(reportResult: Result<[Referenceable]>.Fn)
+    func canHaveChildren() -> Bool
+}
+
+extension Content {
+    public func canHaveChildren() -> Bool {
+        return false
+    }
 }
 
 public struct EmptyContent: Content {
@@ -93,14 +111,18 @@ public struct ContentFolder: Content {
     public let content: String
     public let reference: Referenceable
     
-    public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
-        reportResult(Result<[Referenceable]>.Success([]))
-    }
-    
     public init(title: String, content: String, reference: Referenceable) {
         self.title = title
         self.content = content
         self.reference = reference
+    }
+    
+    public func canHaveChildren() -> Bool {
+        return true
+    }
+    
+    public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
+        reportResult(Result<[Referenceable]>.Success([]))
     }
 }
 
