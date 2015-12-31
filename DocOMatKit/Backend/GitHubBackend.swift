@@ -123,6 +123,16 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     }
 }
 
+public struct GitHubPersonalAccessAuth: BackendAuth {
+    public let rootUrl: NSURL
+    public let token: String
+    
+    public func authenticate(reportResult: Result<BackendDocRetrieval>.Fn) {
+        let tokenQuery = NSURLQueryItem(name: "access_token", value: token)
+        reportResult(.Success(GitHubDocRetrieval(rootUrl: self.rootUrl, http: HttpSynchronous(extraQueryItems: [tokenQuery]))))
+    }
+}
+
 public struct GitHubFactory: BackendFactory {
     
     let rootUrl: NSURL!
@@ -143,14 +153,18 @@ public struct GitHubFactory: BackendFactory {
     }
     
     public func makeAuth() -> BackendAuth {
-        return NullAuth(docRetrieval: makeDocRetrieval())
+        switch (self.authConfig?.string("type")) {
+            case .Some("personal-access-token"):
+                if let token = self.authConfig?.string("token") {
+                    return GitHubPersonalAccessAuth(rootUrl: self.rootUrl, token: token)
+                }
+            default:
+                return NullAuth(docRetrieval: GitHubDocRetrieval(rootUrl: rootUrl, http: HttpSynchronous()))
+        }
+        return NullAuth(docRetrieval: GitHubDocRetrieval(rootUrl: rootUrl, http: HttpSynchronous()))
     }
     
     public func makeDocFormatter() -> BackendDocFormatter {
         return GitHubDocFormatter()
-    }
-    
-    private func makeDocRetrieval() -> BackendDocRetrieval {
-        return GitHubDocRetrieval(rootUrl: rootUrl, http: HttpSynchronous())
     }
 }
