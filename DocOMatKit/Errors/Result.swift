@@ -107,6 +107,10 @@ public func |><A, B> (left: Result<A>, right: (A) throws -> Result<B>) -> Result
     return left.flatMap(right)
 }
 
+public func |><A, B> (left: A?, right: (A) -> Result<B>) -> Result<B> {
+    return Result<A>(left).flatMap(right)
+}
+
 public func |><A, B> (left: Result<A>, right: (A) -> B) -> Result<B> {
     return left.map(right)
 }
@@ -118,6 +122,11 @@ public func |><A, B> (left: Result<A>, right: (A) throws -> B) -> Result<B> {
 public func |><A, B> (left: Result<A>, right: (A) -> B?) -> Result<B> {
     return left.mapOptional(right)
 }
+
+public func |><A, B> (left: A?, right: (A) -> B?) -> Result<B> {
+    return Result<A>(left).mapOptional(right)
+}
+
 
 public func |><A> (left: Result<A>, right: Result<A>.Fn) -> () {
     return right(left)

@@ -73,8 +73,9 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     }
 
     private func parseFile(ref: Referenceable, response: [String: AnyObject]) -> Result<Content> {
-        let doc =
-        Result<String>((response["content"] as? String)?.stringByReplacingOccurrencesOfString("\n", withString: ""))
+        // GitHub returns B64 data in a content key. Unfortunately, GitHub puts \n in the b64 data, so it has to be removed.
+        let doc = response["content"] as? String
+            |> { $0.stringByReplacingOccurrencesOfString("\n", withString: "") }
             |> { NSData(base64EncodedString: $0, options: NSDataBase64DecodingOptions(rawValue: 0)) }
             |> { String(data: $0, encoding: NSUTF8StringEncoding) }
             |> { (content: String) -> Content in
