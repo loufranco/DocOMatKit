@@ -18,10 +18,10 @@ public class DocListViewModel: DocListViewModelable {
     
     weak var delegate: DocListViewModelDelegate?
     
-    init?(config: Config?) {
+    init?(config: Config?, authConfig: Config?) {
         self.config = config
         self.title = self.config?.string("title") ?? ""
-        self.factory = makeBackendFactory(config)
+        self.factory = makeBackendFactory(config, authConfig: authConfig)
         guard let _ = self.factory else {
             return nil
         }

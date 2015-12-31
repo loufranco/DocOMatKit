@@ -47,14 +47,14 @@ public protocol BackendFactory {
 }
 
 /// Create a factory from a configuration
-public func makeBackendFactory(config: Config?) -> BackendFactory? {
+public func makeBackendFactory(config: Config?, authConfig: Config?) -> BackendFactory? {
     guard let type = config?.string("type") else {
         return nil
     }
     
     switch (type) {
     case "GitHub":
-        return GitHubFactory(config: config)
+        return GitHubFactory(config: config, authConfig: authConfig)
     default:
         return nil
     }

@@ -42,8 +42,10 @@ public class DocOMatAppDelegate: UIResponder, UIApplicationDelegate {
     public func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
 
-        let config = PListConfig(name: "doc-o-mat", bundle: NSBundle.mainBundle())
-        guard let vm = DocListViewModel(config: config.backends()?.dict("doc-o-mat")) else {
+        let config = PListConfig(name: "doc-o-mat", bundle: NSBundle.mainBundle()).backends()?.dict("doc-o-mat")
+        let authConfig = PListConfig(name: "Auth/auth", bundle: NSBundle.mainBundle()).dict(config?.string("type"))
+
+        guard let vm = DocListViewModel(config: config, authConfig: authConfig) else {
             return false
         }
         
