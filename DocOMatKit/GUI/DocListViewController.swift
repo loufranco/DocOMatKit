@@ -17,9 +17,12 @@ public protocol DocListViewModelDelegate {
 
 public protocol DocListViewModelable {
     var title: String { get }
+    
     func docCount() -> Int
     func docTitle(index: Int) -> String
     func docContent(index: Int) -> String
+    func docCanHaveChildren(index: Int) -> Bool
+    
     func connect(delegate: DocListViewModelDelegate)
 }
 
@@ -64,6 +67,7 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
         let cell = tableView.dequeueReusableCellWithIdentifier(id) ??
                     UITableViewCell(style: .Default, reuseIdentifier: id)
         cell.textLabel?.text = viewModel.docTitle(indexPath.row)
+        cell.accessoryType = viewModel.docCanHaveChildren(indexPath.row) ? .DisclosureIndicator : .None
         return cell
     }
     

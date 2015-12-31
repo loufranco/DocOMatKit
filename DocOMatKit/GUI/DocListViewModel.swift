@@ -61,6 +61,10 @@ public class DocListViewModel: DocListViewModelable {
         return self.docs?[index].content ?? ""
     }
     
+    public func docCanHaveChildren(index: Int) -> Bool {
+        return self.docs?[index].canHaveChildren() ?? false
+    }
+    
     public func connect(delegate: DocListViewModelDelegate) {
         self.delegate = delegate
         
