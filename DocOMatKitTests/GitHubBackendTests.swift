@@ -38,7 +38,7 @@ class GitHubBackendTests: XCTestCase {
     func checkRefList(list: [Referenceable]) -> Result<()> {
         XCTAssert(list.count > 0)
         for l in list {
-            XCTAssert(l.referenceName.hasPrefix("0"))
+            XCTAssert(l.referenceName.hasPrefix("docs/0"))
         }
         return .Success(())
     }

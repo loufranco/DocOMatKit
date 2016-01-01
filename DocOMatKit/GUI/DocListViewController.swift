@@ -23,6 +23,8 @@ public protocol DocListViewModelable {
     func docContent(index: Int) -> String
     func docCanHaveChildren(index: Int) -> Bool
     
+    func childModel(index: Int) -> DocListViewModelable
+    
     func connect(delegate: DocListViewModelDelegate)
 }
 
@@ -54,6 +56,8 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
         }
     }
     
+    /// UITableViewDelegate/DataSource
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.docCount()
     }
@@ -70,6 +74,15 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
         cell.accessoryType = viewModel.docCanHaveChildren(indexPath.row) ? .DisclosureIndicator : .None
         return cell
     }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if viewModel.docCanHaveChildren(indexPath.row) {
+            self.navigationController?.pushViewController(DocListViewController(viewModel: viewModel.childModel(indexPath.row)), animated: true)
+        }
+        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
+    /// DocListViewModelDelegate
     
     func reloadData() {
         self.tableView.reloadData()
