@@ -11,11 +11,16 @@ import Foundation
 
 public protocol Referenceable {
     var referenceName: String { get }
+    func title() -> String
     func get(reportResult: Result<Content>.Fn)
     func canHaveChildren() -> Bool
 }
 
 extension Referenceable {
+    public func title() -> String {
+        return NSURL(string: self.referenceName)?.lastPathComponent ?? self.referenceName ?? ""
+    }
+    
     public func canHaveChildren() -> Bool {
         return false
     }
