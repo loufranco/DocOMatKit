@@ -141,11 +141,14 @@ public struct MarkdownDocument: File {
     public let title: String
     public let content: String
     public let reference: Referenceable
+
+    static func titleFromContent(content: String) -> String {
+        return String(content.characters.dropWhile { ["#", " "].contains($0) }.takeUntil { $0 == "\n" })
+    }
     
     public init(content: String, reference: Referenceable) {
         self.content = content
-        let contentLines = self.content.componentsSeparatedByString("\n")
-        self.title = (contentLines.count > 0) ? contentLines[0] : ""
+        self.title = MarkdownDocument.titleFromContent(content)
         self.reference = reference
     }
 }
