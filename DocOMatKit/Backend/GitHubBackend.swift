@@ -68,7 +68,10 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
         getList(self.rootUrl, reportResult: reportResult)
     }
     
-    public func getList(ref: Referenceable, reportResult: Result<[Referenceable]>.Fn) {
+    public func getList(ref: Referenceable?, reportResult: Result<[Referenceable]>.Fn) {
+        guard let ref = ref else {
+            return getList(reportResult)
+        }
         getList(self.rootUrl.URLByAppendingPathComponent(ref.referenceName), reportResult: reportResult)
     }
     
