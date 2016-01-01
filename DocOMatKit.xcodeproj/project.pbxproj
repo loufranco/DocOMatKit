@@ -12,6 +12,8 @@
 		9A25B6931C31E174001F7C23 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A25B6921C31E174001F7C23 /* Result.swift */; };
 		9A25B6951C31E93C001F7C23 /* DocListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A25B6941C31E93C001F7C23 /* DocListViewController.swift */; };
 		9A25B6971C32EA26001F7C23 /* DocListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A25B6961C32EA26001F7C23 /* DocListViewModel.swift */; };
+		9A4CB0861C3602E100A52362 /* CollectionType+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4CB0851C3602E100A52362 /* CollectionType+Extensions.swift */; };
+		9A4CB0891C36032C00A52362 /* CollectionExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4CB0881C36032C00A52362 /* CollectionExtensionsTests.swift */; };
 		9A5BCD791C1DFF6C003516CF /* DocOMatKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A5BCD781C1DFF6C003516CF /* DocOMatKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9A5BCD801C1DFF6C003516CF /* DocOMatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A5BCD751C1DFF6C003516CF /* DocOMatKit.framework */; };
 		9A5BCDB11C1E021C003516CF /* HomeTabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDB01C1E021C003516CF /* HomeTabsViewController.swift */; };
@@ -42,6 +44,8 @@
 		9A25B6921C31E174001F7C23 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		9A25B6941C31E93C001F7C23 /* DocListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocListViewController.swift; sourceTree = "<group>"; };
 		9A25B6961C32EA26001F7C23 /* DocListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocListViewModel.swift; sourceTree = "<group>"; };
+		9A4CB0851C3602E100A52362 /* CollectionType+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CollectionType+Extensions.swift"; sourceTree = "<group>"; };
+		9A4CB0881C36032C00A52362 /* CollectionExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionExtensionsTests.swift; sourceTree = "<group>"; };
 		9A5BCD751C1DFF6C003516CF /* DocOMatKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DocOMatKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A5BCD781C1DFF6C003516CF /* DocOMatKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DocOMatKit.h; sourceTree = "<group>"; };
 		9A5BCD7A1C1DFF6C003516CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -95,6 +99,22 @@
 			path = Net;
 			sourceTree = "<group>";
 		};
+		9A4CB0841C3602B400A52362 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				9A4CB0851C3602E100A52362 /* CollectionType+Extensions.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		9A4CB0871C3602F300A52362 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				9A4CB0881C36032C00A52362 /* CollectionExtensionsTests.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		9A5BCD6B1C1DFF6C003516CF = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +136,7 @@
 		9A5BCD771C1DFF6C003516CF /* DocOMatKit */ = {
 			isa = PBXGroup;
 			children = (
+				9A4CB0841C3602B400A52362 /* Utils */,
 				9A25B68F1C3177E6001F7C23 /* Net */,
 				9A25B68C1C307AC4001F7C23 /* Errors */,
 				9A5BCDB91C1E05D7003516CF /* App */,
@@ -132,6 +153,7 @@
 		9A5BCD831C1DFF6C003516CF /* DocOMatKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				9A4CB0871C3602F300A52362 /* Utils */,
 				9AEF35621C1F94260008EDD8 /* Backend */,
 				9AEF355F1C1F93C20008EDD8 /* Config */,
 				9AEF35631C1FAD050008EDD8 /* TestData */,
@@ -324,6 +346,7 @@
 				9A25B68E1C307ADF001F7C23 /* Errors.swift in Sources */,
 				9A5BCDBB1C1E05FF003516CF /* DocOMatAppDelegate.swift in Sources */,
 				9A25B6931C31E174001F7C23 /* Result.swift in Sources */,
+				9A4CB0861C3602E100A52362 /* CollectionType+Extensions.swift in Sources */,
 				9A25B6971C32EA26001F7C23 /* DocListViewModel.swift in Sources */,
 				9A5BCDB31C1E029C003516CF /* HomeTabsViewModel.swift in Sources */,
 				9A25B6951C31E93C001F7C23 /* DocListViewController.swift in Sources */,
@@ -338,6 +361,7 @@
 			files = (
 				9AEF35611C1F93EB0008EDD8 /* ConfigTests.swift in Sources */,
 				9AEF356C1C2195D70008EDD8 /* GitHubBackendTests.swift in Sources */,
+				9A4CB0891C36032C00A52362 /* CollectionExtensionsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
