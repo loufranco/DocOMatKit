@@ -43,15 +43,15 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     
     private func jsonToContentReference(json: AnyObject) throws -> Referenceable {
         guard let dict = json as? [String: AnyObject],
-            let name = dict["name"] as? String,
+            let path = dict["path"] as? String,
             let type = dict["type"] as? String else {
                 throw DocOMatRetrievalCode.Parse.error("Unexpected JSON returned: \(json)")
         }
         switch (type) {
         case "file":
-            return ContentReference(docRetrieval: self, referenceName: name)
+            return ContentReference(docRetrieval: self, referenceName: path)
         case "dir":
-            return FolderReference(docRetrieval: self, referenceName: name)
+            return FolderReference(docRetrieval: self, referenceName: path)
         default:
             throw DocOMatRetrievalCode.Parse.error("Unexpected JSON returned: [\(dict)]")
         }
@@ -95,7 +95,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
                 if ref.referenceName.hasSuffix(".md") {
                     return MarkdownDocument(content: content, reference: ref)
                 } else {
-                    return UnknownFile(title: ref.referenceName, content: content, reference: ref)
+                    return UnknownFile(title: ref.title(), content: content, reference: ref)
                 }
             }
         
@@ -122,7 +122,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     }
     
     public func getAsFolder(ref: Referenceable, reportResult: Result<Content>.Fn) {
-        reportResult(.Success(ContentFolder(title: ref.referenceName, content: ref.referenceName, reference: ref)))
+        reportResult(.Success(ContentFolder(title: ref.title(), content: ref.referenceName, reference: ref)))
     }
 }
 
