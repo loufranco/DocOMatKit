@@ -31,6 +31,10 @@ public protocol DictConfig: Config {
 /// A concrete configuration type that must be initialized with a dictionary.
 public struct ConfigWithDictionary: DictConfig {
     public let configDict: [String: AnyObject]
+    
+    public init(configDict: [String: AnyObject]) {
+        self.configDict = configDict
+    }
 }
 
 /// The default behavior of any config that uses a dictionary

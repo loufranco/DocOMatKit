@@ -145,16 +145,6 @@ public struct GitHubFactory: BackendFactory {
     let basePath: String?
     let authConfig: Config?
     
-    public init(rootUrl: NSURL) {
-        self.init(rootUrl: rootUrl, basePath: nil)
-    }
-
-    public init(rootUrl: NSURL, basePath: String?) {
-        self.rootUrl = rootUrl
-        self.basePath = basePath
-        self.authConfig = nil
-    }
-
     public init?(config: Config?, authConfig: Config?) {
         guard let urlString = config?.string("url") else {
             self.rootUrl = nil

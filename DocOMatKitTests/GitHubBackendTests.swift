@@ -19,9 +19,15 @@ func XCTAssertResultSuccess<T>(result: Result<T>) {
 class GitHubBackendTests: XCTestCase {
     
     var github: GitHubFactory!
+    let config = [
+        "type": "GitHub",
+        "url": "https://api.github.com/repos/loufranco/DocOMatKit/contents",
+        "base-path": "docs",
+        "title": "Doc-o-Mat Kit",
+    ]
     
     override func setUp() {
-        github = GitHubFactory(rootUrl: NSURL(string: "https://api.github.com/repos/loufranco/DocOMatKit/contents")!, basePath: "docs")
+        github = GitHubFactory(config: ConfigWithDictionary(configDict: config), authConfig: nil)
     }
     
     func testPublicAuth() {
