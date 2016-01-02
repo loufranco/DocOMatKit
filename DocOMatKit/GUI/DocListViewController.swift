@@ -8,11 +8,12 @@
 
 import Foundation
 
-@objc
+
 public protocol DocListViewModelDelegate {
     func reloadData()
     func reloadRow(row: Int)
     func reportError(e: NSError)
+    func navigateTo(childViewModel: DocListViewModelable)
 }
 
 public protocol DocListViewModelable {
@@ -22,9 +23,7 @@ public protocol DocListViewModelable {
     func docTitle(index: Int) -> String
     func docContent(index: Int) -> String
     func docCanHaveChildren(index: Int) -> Bool
-    
-    func childModel(index: Int) -> DocListViewModelable
-    
+    func docSelected(index: Int)
     func connect(delegate: DocListViewModelDelegate)
 }
 
@@ -76,9 +75,7 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if viewModel.docCanHaveChildren(indexPath.row) {
-            self.navigationController?.pushViewController(DocListViewController(viewModel: viewModel.childModel(indexPath.row)), animated: true)
-        }
+        viewModel.docSelected(indexPath.row)
         self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
@@ -90,6 +87,10 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
     
     func reloadRow(row: Int) {
         self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: row, inSection: 0)], withRowAnimation: .Automatic)
+    }
+    
+    func navigateTo(childViewModel: DocListViewModelable) {
+        self.navigationController?.pushViewController(DocListViewController(viewModel: childViewModel), animated: true)
     }
     
     func reportError(e: NSError) {

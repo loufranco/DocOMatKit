@@ -16,7 +16,7 @@ public class DocListViewModel: DocListViewModelable {
     
     public let title: String
     
-    weak var delegate: DocListViewModelDelegate?
+    var delegate: DocListViewModelDelegate?
     
     convenience init?(config: Config?, authConfig: Config?) {
         guard let factory = makeBackendFactory(config, authConfig: authConfig) else {
@@ -69,8 +69,15 @@ public class DocListViewModel: DocListViewModelable {
         return self.docs?[index].canHaveChildren() ?? false
     }
     
-    public func childModel(index: Int) -> DocListViewModelable {
-        return DocListViewModel(title: self.title, factory: self.factory, baseReference: self.docs?[index].reference)
+    public func docSelected(index: Int) {
+        if docCanHaveChildren(index) {
+            self.delegate?.navigateTo(self.childModel(index))
+        }
+    }
+    
+    private func childModel(index: Int) -> DocListViewModelable {
+        let ref = self.docs?[index].reference
+        return DocListViewModel(title: ref?.title() ?? self.title, factory: self.factory, baseReference: ref)
     }
     
     public func connect(delegate: DocListViewModelDelegate) {
