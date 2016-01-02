@@ -24,10 +24,12 @@ public struct GitHubDocFormatter: BackendDocFormatter {
 
 public struct GitHubDocRetrieval: BackendDocRetrieval {
     public let rootUrl: NSURL
+    public let basePath: String?
     public let http: Http
     
-    public init(rootUrl: NSURL, http: Http) {
+    public init(rootUrl: NSURL, basePath: String?, http: Http) {
         self.rootUrl = rootUrl
+        self.basePath = basePath
         self.http = http
         self.http.makeErrFn = makeGitHubError
     }
@@ -65,7 +67,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     }
     
     public func getList(reportResult: Result<[Referenceable]>.Fn) {
-        getList(self.rootUrl, reportResult: reportResult)
+        getList(self.rootUrl.URLByAppendingPathComponent(self.basePath ?? ""), reportResult: reportResult)
     }
     
     public func getList(ref: Referenceable?, reportResult: Result<[Referenceable]>.Fn) {
@@ -128,30 +130,38 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
 
 public struct GitHubPersonalAccessAuth: BackendAuth {
     public let rootUrl: NSURL
+    public let basePath: String?
     public let token: String
     
     public func authenticate(reportResult: Result<BackendDocRetrieval>.Fn) {
         let tokenQuery = NSURLQueryItem(name: "access_token", value: token)
-        reportResult(.Success(GitHubDocRetrieval(rootUrl: self.rootUrl, http: HttpSynchronous(extraQueryItems: [tokenQuery]))))
+        reportResult(.Success(GitHubDocRetrieval(rootUrl: self.rootUrl, basePath: basePath, http: HttpSynchronous(extraQueryItems: [tokenQuery]))))
     }
 }
 
 public struct GitHubFactory: BackendFactory {
     
     let rootUrl: NSURL!
+    let basePath: String?
     let authConfig: Config?
     
     public init(rootUrl: NSURL) {
+        self.init(rootUrl: rootUrl, basePath: nil)
+    }
+
+    public init(rootUrl: NSURL, basePath: String?) {
         self.rootUrl = rootUrl
+        self.basePath = basePath
         self.authConfig = nil
     }
-    
+
     public init?(config: Config?, authConfig: Config?) {
         guard let urlString = config?.string("url") else {
             self.rootUrl = nil
             return nil
         }
         self.rootUrl = NSURL(string: urlString)
+        self.basePath = config?.string("base-path")
         self.authConfig = authConfig
     }
     
@@ -159,12 +169,12 @@ public struct GitHubFactory: BackendFactory {
         switch (self.authConfig?.string("type")) {
             case .Some("personal-access-token"):
                 if let token = self.authConfig?.string("token") {
-                    return GitHubPersonalAccessAuth(rootUrl: self.rootUrl, token: token)
+                    return GitHubPersonalAccessAuth(rootUrl: self.rootUrl, basePath: self.basePath, token: token)
                 }
             default:
-                return NullAuth(docRetrieval: GitHubDocRetrieval(rootUrl: rootUrl, http: HttpSynchronous()))
+                return NullAuth(docRetrieval: GitHubDocRetrieval(rootUrl: rootUrl, basePath: basePath, http: HttpSynchronous()))
         }
-        return NullAuth(docRetrieval: GitHubDocRetrieval(rootUrl: rootUrl, http: HttpSynchronous()))
+        return NullAuth(docRetrieval: GitHubDocRetrieval(rootUrl: rootUrl, basePath: basePath, http: HttpSynchronous()))
     }
     
     public func makeDocFormatter() -> BackendDocFormatter {

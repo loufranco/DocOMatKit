@@ -21,7 +21,7 @@ class GitHubBackendTests: XCTestCase {
     var github: GitHubFactory!
     
     override func setUp() {
-        github = GitHubFactory(rootUrl: NSURL(string: "https://api.github.com/repos/loufranco/DocOMatKit/contents/docs")!)
+        github = GitHubFactory(rootUrl: NSURL(string: "https://api.github.com/repos/loufranco/DocOMatKit/contents")!, basePath: "docs")
     }
     
     func testPublicAuth() {
@@ -68,7 +68,7 @@ class GitHubBackendTests: XCTestCase {
         var completes = false
         auth.authenticate { docRetrievalResult in
             docRetrievalResult |> { (docRetrieval) -> Result<()> in
-                let ref = ContentReference(docRetrieval: docRetrieval, referenceName: "03-about-the-license.md")
+                let ref = ContentReference(docRetrieval: docRetrieval, referenceName: "docs/03-about-the-license.md")
                 ref.get() { doc in
                     XCTAssertResultSuccess(doc |> self.checkDocTitle)
                     completes = true

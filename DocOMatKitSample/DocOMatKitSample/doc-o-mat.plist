@@ -18,7 +18,9 @@
 			<key>type</key>
 			<string>GitHub</string>
 			<key>url</key>
-			<string>https://api.github.com/repos/loufranco/DocOMatKit/contents/docs</string>
+			<string>https://api.github.com/repos/loufranco/DocOMatKit/contents</string>
+			<key>base-path</key>
+			<string>docs</string>
 			<key>title</key>
 			<string>Doc-o-Mat Kit</string>
 		</dict>
