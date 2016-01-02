@@ -148,7 +148,7 @@ public struct MarkdownDocument: File {
     public let reference: Referenceable
 
     static func titleFromContent(content: String) -> String {
-        return String(content.characters.dropWhile { ["#", " "].contains($0) }.takeUntil { $0 == "\n" })
+        return String(content.characters.dropWhile { ["#", " "].contains($0) }.takeWhile { $0 != "\n" })
     }
     
     public init(content: String, reference: Referenceable) {
