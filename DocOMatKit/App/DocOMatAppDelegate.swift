@@ -8,15 +8,19 @@
 
 import Foundation
 
+
 public class SplitViewController: UISplitViewController, UISplitViewControllerDelegate {
     
     let viewModel: DocListViewModelable!
+    let contentViewModel: ContentViewModelable
     
-    public init(viewModel: DocListViewModelable) {
+    public init(viewModel: DocListViewModelable, contentViewModel: ContentViewModelable, contentViewDelegate: DocListViewContentDelegate) {
         self.viewModel = viewModel
+        self.contentViewModel = contentViewModel
         super.init(nibName: nil, bundle: nil)
         
         self.delegate = self
+        self.viewModel.connect(contentViewDelegate)
         prepareViews()
     }
 
@@ -27,7 +31,7 @@ public class SplitViewController: UISplitViewController, UISplitViewControllerDe
     
     public func prepareViews() {
         let docListVC = DocListViewController(viewModel: self.viewModel)
-        let docVC = UIViewController()
+        let docVC = ContentViewController(viewModel: contentViewModel)
         docVC.navigationItem.leftItemsSupplementBackButton = true
         docVC.navigationItem.leftBarButtonItem = self.displayModeButtonItem()
         self.viewControllers = [
@@ -45,11 +49,13 @@ public class DocOMatAppDelegate: UIResponder, UIApplicationDelegate {
         let config = PListConfig(name: "doc-o-mat", bundle: NSBundle.mainBundle()).backends()?.dict("doc-o-mat")
         let authConfig = PListConfig(name: "Auth/auth", bundle: NSBundle.mainBundle()).dict(config?.string("type"))
 
-        guard let vm = DocListViewModel(config: config, authConfig: authConfig) else {
+        guard let vm = DocListViewModel(config: config, authConfig: authConfig)
+            else {
             return false
         }
         
-        self.window?.rootViewController = SplitViewController(viewModel: vm)
+        let contentViewModel = ContentViewModel()
+        self.window?.rootViewController = SplitViewController(viewModel: vm, contentViewModel: contentViewModel, contentViewDelegate: contentViewModel)
         self.window?.makeKeyAndVisible()
 
         return true

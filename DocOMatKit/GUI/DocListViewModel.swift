@@ -8,11 +8,16 @@
 
 import Foundation
 
+public protocol DocListViewContentDelegate {
+    func view(doc: Content)
+}
+
 public class DocListViewModel: DocListViewModelable {
     
     let factory: BackendFactory!
     var docs: [Content]?
     let baseReference: Referenceable?
+    var contentDelegate: DocListViewContentDelegate?
     
     public let title: String
     
@@ -72,6 +77,10 @@ public class DocListViewModel: DocListViewModelable {
     public func docSelected(index: Int) {
         if docCanHaveChildren(index) {
             self.delegate?.navigateTo(self.childModel(index))
+        } else {
+            if let doc = self.docs?[index] {
+                self.contentDelegate?.view(doc)
+            }
         }
     }
     
@@ -96,4 +105,11 @@ public class DocListViewModel: DocListViewModelable {
             docRetrievalResult.onError { e in strongSelf.delegate?.reportError(e as NSError) }
         }
     }
+    
+    /// DocListContentViewDelegate
+    
+    public func connect(contentDelegate: DocListViewContentDelegate) {
+        self.contentDelegate = contentDelegate
+    }
+    
 }

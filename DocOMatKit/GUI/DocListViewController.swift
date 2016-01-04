@@ -25,6 +25,8 @@ public protocol DocListViewModelable {
     func docCanHaveChildren(index: Int) -> Bool
     func docSelected(index: Int)
     func connect(delegate: DocListViewModelDelegate)
+    
+    func connect(contentDelegate: DocListViewContentDelegate)
 }
 
 class DocListViewController: UITableViewController, DocListViewModelDelegate {
