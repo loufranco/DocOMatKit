@@ -23,14 +23,14 @@ public class DocListViewModel: DocListViewModelable {
     
     var delegate: DocListViewModelDelegate?
     
-    convenience init?(config: Config?, authConfig: Config?) {
+    public convenience init?(config: Config?, authConfig: Config?) {
         guard let factory = makeBackendFactory(config, authConfig: authConfig) else {
             return nil
         }
         self.init(title: config?.string("title") ?? "", factory: factory, baseReference: nil)
     }
     
-    init(title: String, factory: BackendFactory, baseReference: Referenceable?) {
+    public init(title: String, factory: BackendFactory, baseReference: Referenceable?) {
         self.title = title
         self.factory = factory
         self.baseReference = baseReference
@@ -66,10 +66,6 @@ public class DocListViewModel: DocListViewModelable {
         return self.docs?[index].title ?? ""
     }
     
-    public func docContent(index: Int) -> String {
-        return self.docs?[index].content ?? ""
-    }
-    
     public func docCanHaveChildren(index: Int) -> Bool {
         return self.docs?[index].canHaveChildren() ?? false
     }
@@ -80,6 +76,7 @@ public class DocListViewModel: DocListViewModelable {
         } else {
             if let doc = self.docs?[index] {
                 self.contentDelegate?.view(doc)
+                self.delegate?.showDoc()
             }
         }
     }
@@ -89,7 +86,7 @@ public class DocListViewModel: DocListViewModelable {
         return DocListViewModel(title: ref?.title() ?? self.title, factory: self.factory, baseReference: ref)
     }
     
-    public func connect(delegate: DocListViewModelDelegate) {
+    public func connect(delegate delegate: DocListViewModelDelegate) {
         self.delegate = delegate
         
         self.factory.makeAuth().authenticate { [weak self] docRetrievalResult in
@@ -108,7 +105,7 @@ public class DocListViewModel: DocListViewModelable {
     
     /// DocListContentViewDelegate
     
-    public func connect(contentDelegate: DocListViewContentDelegate) {
+    public func connect(contentDelegate contentDelegate: DocListViewContentDelegate) {
         self.contentDelegate = contentDelegate
     }
     

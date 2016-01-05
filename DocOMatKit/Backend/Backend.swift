@@ -17,7 +17,7 @@ public protocol BackendAuth {
 public struct NullAuth: BackendAuth {
     let docRetrieval: BackendDocRetrieval
     
-    init(docRetrieval: BackendDocRetrieval) {
+    public init(docRetrieval: BackendDocRetrieval) {
         self.docRetrieval = docRetrieval
     }
     

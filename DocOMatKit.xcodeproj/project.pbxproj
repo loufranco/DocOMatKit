@@ -16,6 +16,8 @@
 		9A4CB0891C36032C00A52362 /* SequenceExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4CB0881C36032C00A52362 /* SequenceExtensionsTests.swift */; };
 		9A4CB08B1C39D3FA00A52362 /* ContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4CB08A1C39D3FA00A52362 /* ContentViewController.swift */; };
 		9A4CB08D1C39EBCC00A52362 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4CB08C1C39EBCC00A52362 /* ContentViewModel.swift */; };
+		9A4CB0901C3AA5DB00A52362 /* ListContentViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4CB08F1C3AA5DB00A52362 /* ListContentViewModelTests.swift */; };
+		9A4CB0931C3AA7A700A52362 /* MockBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4CB0921C3AA7A700A52362 /* MockBackend.swift */; };
 		9A5BCD791C1DFF6C003516CF /* DocOMatKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A5BCD781C1DFF6C003516CF /* DocOMatKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9A5BCD801C1DFF6C003516CF /* DocOMatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A5BCD751C1DFF6C003516CF /* DocOMatKit.framework */; };
 		9A5BCDB11C1E021C003516CF /* HomeTabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCDB01C1E021C003516CF /* HomeTabsViewController.swift */; };
@@ -50,6 +52,8 @@
 		9A4CB0881C36032C00A52362 /* SequenceExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequenceExtensionsTests.swift; sourceTree = "<group>"; };
 		9A4CB08A1C39D3FA00A52362 /* ContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentViewController.swift; sourceTree = "<group>"; };
 		9A4CB08C1C39EBCC00A52362 /* ContentViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		9A4CB08F1C3AA5DB00A52362 /* ListContentViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListContentViewModelTests.swift; sourceTree = "<group>"; };
+		9A4CB0921C3AA7A700A52362 /* MockBackend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockBackend.swift; sourceTree = "<group>"; };
 		9A5BCD751C1DFF6C003516CF /* DocOMatKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DocOMatKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A5BCD781C1DFF6C003516CF /* DocOMatKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DocOMatKit.h; sourceTree = "<group>"; };
 		9A5BCD7A1C1DFF6C003516CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -119,6 +123,22 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		9A4CB08E1C3AA5A600A52362 /* GUI */ = {
+			isa = PBXGroup;
+			children = (
+				9A4CB08F1C3AA5DB00A52362 /* ListContentViewModelTests.swift */,
+			);
+			path = GUI;
+			sourceTree = "<group>";
+		};
+		9A4CB0911C3AA78800A52362 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				9A4CB0921C3AA7A700A52362 /* MockBackend.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
 		9A5BCD6B1C1DFF6C003516CF = {
 			isa = PBXGroup;
 			children = (
@@ -157,6 +177,8 @@
 		9A5BCD831C1DFF6C003516CF /* DocOMatKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				9A4CB0911C3AA78800A52362 /* Mocks */,
+				9A4CB08E1C3AA5A600A52362 /* GUI */,
 				9A4CB0871C3602F300A52362 /* Utils */,
 				9AEF35621C1F94260008EDD8 /* Backend */,
 				9AEF355F1C1F93C20008EDD8 /* Config */,
@@ -367,7 +389,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A4CB0901C3AA5DB00A52362 /* ListContentViewModelTests.swift in Sources */,
 				9AEF35611C1F93EB0008EDD8 /* ConfigTests.swift in Sources */,
+				9A4CB0931C3AA7A700A52362 /* MockBackend.swift in Sources */,
 				9AEF356C1C2195D70008EDD8 /* GitHubBackendTests.swift in Sources */,
 				9A4CB0891C36032C00A52362 /* SequenceExtensionsTests.swift in Sources */,
 			);

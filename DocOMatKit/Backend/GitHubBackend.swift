@@ -18,7 +18,7 @@ public struct GitHubPrivateAuth: BackendAuth {
 
 public struct GitHubDocFormatter: BackendDocFormatter {
     public func formatAsHtml(doc: File) -> String {
-        return ""
+        return doc.content
     }
 }
 

@@ -20,7 +20,7 @@ public class SplitViewController: UISplitViewController, UISplitViewControllerDe
         super.init(nibName: nil, bundle: nil)
         
         self.delegate = self
-        self.viewModel.connect(contentViewDelegate)
+        self.viewModel.connect(contentDelegate: contentViewDelegate)
         prepareViews()
     }
 

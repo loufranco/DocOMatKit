@@ -14,6 +14,7 @@ public protocol DocListViewModelDelegate {
     func reloadRow(row: Int)
     func reportError(e: NSError)
     func navigateTo(childViewModel: DocListViewModelable)
+    func showDoc()
 }
 
 public protocol DocListViewModelable {
@@ -21,15 +22,14 @@ public protocol DocListViewModelable {
     
     func docCount() -> Int
     func docTitle(index: Int) -> String
-    func docContent(index: Int) -> String
     func docCanHaveChildren(index: Int) -> Bool
     func docSelected(index: Int)
-    func connect(delegate: DocListViewModelDelegate)
     
-    func connect(contentDelegate: DocListViewContentDelegate)
+    func connect(delegate delegate: DocListViewModelDelegate)
+    func connect(contentDelegate contentDelegate: DocListViewContentDelegate)
 }
 
-class DocListViewController: UITableViewController, DocListViewModelDelegate {
+class DocListViewController: UITableViewController, DocListViewModelDelegate, UISplitViewControllerDelegate {
     
     let viewModel: DocListViewModelable
     var unreportedError: NSError? = nil
@@ -46,7 +46,7 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.viewModel.connect(self)
+        self.viewModel.connect(delegate: self)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -104,4 +104,17 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
             self.unreportedError = e
         }
     }
+    
+    func showDoc() {
+        
+    }
+    
+    /// UISplitViewControllerDelegate
+    
+    func splitViewController(splitViewController: UISplitViewController,
+        collapseSecondaryViewController secondaryViewController: UIViewController,
+        ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
+        return false
+    }
+    
 }
