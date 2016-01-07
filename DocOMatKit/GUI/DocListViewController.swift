@@ -29,13 +29,15 @@ public protocol DocListViewModelable {
     func connect(contentDelegate contentDelegate: DocListViewContentDelegate)
 }
 
-class DocListViewController: UITableViewController, DocListViewModelDelegate, UISplitViewControllerDelegate {
+class DocListViewController: UITableViewController, DocListViewModelDelegate {
     
     let viewModel: DocListViewModelable
+    let viewCoordinator: DocViewCoordinator
     var unreportedError: NSError? = nil
     
-    init(viewModel: DocListViewModelable) {
+    init(viewModel: DocListViewModelable, viewCoordinator: DocViewCoordinator) {
         self.viewModel = viewModel
+        self.viewCoordinator = viewCoordinator
         super.init(style: .Plain)
         self.title = viewModel.title
     }
@@ -92,7 +94,7 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate, UI
     }
     
     func navigateTo(childViewModel: DocListViewModelable) {
-        self.navigationController?.pushViewController(DocListViewController(viewModel: childViewModel), animated: true)
+        self.navigationController?.pushViewController(DocListViewController(viewModel: childViewModel, viewCoordinator: self.viewCoordinator), animated: true)
     }
     
     func reportError(e: NSError) {
@@ -106,15 +108,6 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate, UI
     }
     
     func showDoc() {
-        
+        self.viewCoordinator.showDoc()
     }
-    
-    /// UISplitViewControllerDelegate
-    
-    func splitViewController(splitViewController: UISplitViewController,
-        collapseSecondaryViewController secondaryViewController: UIViewController,
-        ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
-        return false
-    }
-    
 }

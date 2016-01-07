@@ -48,6 +48,10 @@ public class ContentViewController: UIViewController, ContentViewModelDelegate {
         )
     }
     
+    public func hasContent() -> Bool {
+        return self.textView.text != ""
+    }
+    
     /// ContentViewModelDelegate
     
     public func setText(text: String) {

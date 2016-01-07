@@ -8,18 +8,24 @@
 
 import Foundation
 
+public protocol DocViewCoordinator {
+    func showDoc()
+}
 
-public class SplitViewController: UISplitViewController, UISplitViewControllerDelegate {
+public class SplitViewController: UISplitViewController, UISplitViewControllerDelegate, DocViewCoordinator {
     
     let viewModel: DocListViewModelable!
     let contentViewModel: ContentViewModelable
+    
+    var masterVC: UIViewController!
+    var detailVC: UIViewController!
+    var contentVC: ContentViewController!
     
     public init(viewModel: DocListViewModelable, contentViewModel: ContentViewModelable, contentViewDelegate: DocListViewContentDelegate) {
         self.viewModel = viewModel
         self.contentViewModel = contentViewModel
         super.init(nibName: nil, bundle: nil)
         
-        self.delegate = self
         self.viewModel.connect(contentDelegate: contentViewDelegate)
         prepareViews()
     }
@@ -30,14 +36,44 @@ public class SplitViewController: UISplitViewController, UISplitViewControllerDe
     }
     
     public func prepareViews() {
-        let docListVC = DocListViewController(viewModel: self.viewModel)
-        let docVC = ContentViewController(viewModel: contentViewModel)
-        docVC.navigationItem.leftItemsSupplementBackButton = true
-        docVC.navigationItem.leftBarButtonItem = self.displayModeButtonItem()
-        self.viewControllers = [
-            UINavigationController(rootViewController: docListVC),
-            UINavigationController(rootViewController: docVC)]
+        let docListVC = DocListViewController(viewModel: self.viewModel, viewCoordinator: self)
+        self.contentVC = ContentViewController(viewModel: contentViewModel)
+        self.contentVC.navigationItem.leftItemsSupplementBackButton = true
+        self.contentVC.navigationItem.leftBarButtonItem = self.displayModeButtonItem()
+        
+        self.masterVC = UINavigationController(rootViewController: docListVC)
+        self.detailVC = UINavigationController(rootViewController: self.contentVC)
+        self.viewControllers = [masterVC, detailVC]
+        self.delegate = self
     }
+    
+    /// DocViewCoordinator
+    public func showDoc() {
+        self.showDetailViewController(self.detailVC, sender: self)
+    }
+    
+    /// UISplitViewControllerDelegate
+    
+    public func splitViewController(splitViewController: UISplitViewController,
+        collapseSecondaryViewController secondaryViewController: UIViewController,
+        ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
+            
+        return !self.contentVC.hasContent()
+    }
+    
+    public func primaryViewControllerForCollapsingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
+        return self.masterVC
+    }
+    
+    public func primaryViewControllerForExpandingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
+        return self.masterVC
+    }
+    
+    public func splitViewController(splitViewController: UISplitViewController, separateSecondaryViewControllerFromPrimaryViewController primaryViewController: UIViewController) -> UIViewController? {
+        return self.detailVC
+    }
+
+    
 }
 
 public class DocOMatAppDelegate: UIResponder, UIApplicationDelegate {
