@@ -21,18 +21,13 @@ public protocol ContentViewModelDelegate {
 public class ContentViewController: UIViewController, ContentViewModelDelegate {
 
     let textView = UITextView()
-    var viewModel: ContentViewModelable!
+    let viewModel: ContentViewModelable
     
-    convenience init(viewModel: ContentViewModelable) {
-        self.init()
+    init(viewModel: ContentViewModelable) {
         self.viewModel = viewModel
-        self.viewModel.connect(self)
-    }
-    
-    private init() {
         super.init(nibName: nil, bundle: nil)
-        self.viewModel = nil
-    }
+        self.viewModel.connect(self)
+    }    
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
