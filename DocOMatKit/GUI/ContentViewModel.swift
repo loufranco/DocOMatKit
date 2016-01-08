@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class ContentViewModel: ContentViewModelable, DocListViewContentDelegate {
+public class ContentViewModel: ContentViewModelable {
     
     var delegate: ContentViewModelDelegate?
     
@@ -17,7 +17,8 @@ public class ContentViewModel: ContentViewModelable, DocListViewContentDelegate 
         delegate.setText(doc.content)
     }
     
-    public func connect(delegate: ContentViewModelDelegate) {
+    public func connect(delegate: ContentViewModelDelegate) ->ContentViewModelable {
         self.delegate = delegate
+        return self
     }
 }

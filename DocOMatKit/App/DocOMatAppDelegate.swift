@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol DocViewCoordinator {
-    func showDoc()
+    func view(doc: Content)
 }
 
 public class SplitViewController: UISplitViewController, UISplitViewControllerDelegate, DocViewCoordinator {
@@ -21,12 +21,12 @@ public class SplitViewController: UISplitViewController, UISplitViewControllerDe
     var detailVC: UIViewController!
     var contentVC: ContentViewController!
     
-    public init(viewModel: DocListViewModelable, contentViewModel: ContentViewModelable, contentViewDelegate: DocListViewContentDelegate) {
+    public init(viewModel: DocListViewModelable, contentViewModel: ContentViewModelable) {
         self.viewModel = viewModel
         self.contentViewModel = contentViewModel
         super.init(nibName: nil, bundle: nil)
         
-        self.viewModel.connect(contentDelegate: contentViewDelegate)
+        self.viewModel.connect(coordinator: self)
         prepareViews()
     }
 
@@ -48,7 +48,9 @@ public class SplitViewController: UISplitViewController, UISplitViewControllerDe
     }
     
     /// DocViewCoordinator
-    public func showDoc() {
+    
+    public func view(doc: Content) {
+        self.contentViewModel.view(doc)
         self.showDetailViewController(self.detailVC, sender: self)
     }
     
@@ -91,7 +93,7 @@ public class DocOMatAppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         let contentViewModel = ContentViewModel()
-        self.window?.rootViewController = SplitViewController(viewModel: vm, contentViewModel: contentViewModel, contentViewDelegate: contentViewModel)
+        self.window?.rootViewController = SplitViewController(viewModel: vm, contentViewModel: contentViewModel)
         self.window?.makeKeyAndVisible()
 
         return true

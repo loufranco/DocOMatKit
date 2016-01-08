@@ -8,16 +8,13 @@
 
 import Foundation
 
-public protocol DocListViewContentDelegate {
-    func view(doc: Content)
-}
 
 public class DocListViewModel: DocListViewModelable {
     
     let factory: BackendFactory!
     var docs: [Content]?
     let baseReference: Referenceable?
-    var contentDelegate: DocListViewContentDelegate?
+    var coordinator: DocViewCoordinator?
     
     public let title: String
     
@@ -75,18 +72,17 @@ public class DocListViewModel: DocListViewModelable {
             self.delegate?.navigateTo(self.childModel(index))
         } else {
             if let doc = self.docs?[index] {
-                self.contentDelegate?.view(doc)
-                self.delegate?.showDoc()
+                self.coordinator!.view(doc)
             }
         }
     }
     
     private func childModel(index: Int) -> DocListViewModelable {
         let ref = self.docs?[index].reference
-        return DocListViewModel(title: ref?.title() ?? self.title, factory: self.factory, baseReference: ref)
+        return DocListViewModel(title: ref?.title() ?? self.title, factory: self.factory, baseReference: ref).connect(coordinator: self.coordinator!)
     }
     
-    public func connect(delegate delegate: DocListViewModelDelegate) {
+    public func connect(delegate delegate: DocListViewModelDelegate) -> DocListViewModelable {
         self.delegate = delegate
         
         self.factory.makeAuth().authenticate { [weak self] docRetrievalResult in
@@ -101,12 +97,15 @@ public class DocListViewModel: DocListViewModelable {
             }
             docRetrievalResult.onError { e in strongSelf.delegate?.reportError(e as NSError) }
         }
+        
+        return self
     }
     
     /// DocListContentViewDelegate
     
-    public func connect(contentDelegate contentDelegate: DocListViewContentDelegate) {
-        self.contentDelegate = contentDelegate
+    public func connect(coordinator coordinator: DocViewCoordinator) -> DocListViewModelable {
+        self.coordinator = coordinator
+        return self
     }
     
 }

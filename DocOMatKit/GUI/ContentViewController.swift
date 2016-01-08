@@ -10,7 +10,8 @@ import UIKit
 
 
 public protocol ContentViewModelable {
-    func connect(delegate: ContentViewModelDelegate)
+    func view(doc: Content)
+    func connect(delegate: ContentViewModelDelegate) -> ContentViewModelable
 }
 
 public protocol ContentViewModelDelegate {

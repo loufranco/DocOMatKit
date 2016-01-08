@@ -10,7 +10,7 @@ import XCTest
 import DocOMatKit
 
 
-class ListContentViewModelTests: XCTestCase, DocListViewModelDelegate, DocListViewContentDelegate {
+class ListContentViewModelTests: XCTestCase, DocListViewModelDelegate, DocViewCoordinator {
     var lastError: NSError? = nil
     var lastVM: DocListViewModelable? = nil
     var lastDoc: Content? = nil
@@ -23,11 +23,10 @@ class ListContentViewModelTests: XCTestCase, DocListViewModelDelegate, DocListVi
         self.lastError = nil
         self.lastVM = nil
         self.lastDoc = nil
-        self.showDocCalled = false
         
         docListVM = DocListViewModel(title: "", factory: MockBackendFactory(), baseReference: nil)
         docListVM?.connect(delegate: self)
-        docListVM?.connect(contentDelegate: self)
+        docListVM?.connect(coordinator: self)
     }
     
     func testGetList() {
@@ -51,7 +50,6 @@ class ListContentViewModelTests: XCTestCase, DocListViewModelDelegate, DocListVi
         docListVM?.docSelected(1)
         XCTAssertNil(self.lastVM)
         XCTAssertNotNil(self.lastDoc)
-        XCTAssertTrue(self.showDocCalled)
         XCTAssertNil(self.lastError)
     }
     
@@ -73,12 +71,8 @@ class ListContentViewModelTests: XCTestCase, DocListViewModelDelegate, DocListVi
         self.lastVM = childViewModel
     }
     
-    func showDoc() {
-        self.showDocCalled = true
-    }
-    
-    /// DocListViewContentDelegate
-    
+    /// Default Clipboard Text
+   
     func view(doc: Content) {
         self.lastDoc = doc
     }

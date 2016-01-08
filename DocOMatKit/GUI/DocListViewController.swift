@@ -14,7 +14,6 @@ public protocol DocListViewModelDelegate {
     func reloadRow(row: Int)
     func reportError(e: NSError)
     func navigateTo(childViewModel: DocListViewModelable)
-    func showDoc()
 }
 
 public protocol DocListViewModelable {
@@ -25,8 +24,8 @@ public protocol DocListViewModelable {
     func docCanHaveChildren(index: Int) -> Bool
     func docSelected(index: Int)
     
-    func connect(delegate delegate: DocListViewModelDelegate)
-    func connect(contentDelegate contentDelegate: DocListViewContentDelegate)
+    func connect(delegate delegate: DocListViewModelDelegate) -> DocListViewModelable
+    func connect(coordinator coordinator: DocViewCoordinator) -> DocListViewModelable
 }
 
 class DocListViewController: UITableViewController, DocListViewModelDelegate {
@@ -107,7 +106,4 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
         }
     }
     
-    func showDoc() {
-        self.viewCoordinator.showDoc()
-    }
 }
