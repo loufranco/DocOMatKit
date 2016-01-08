@@ -11,7 +11,7 @@ import Foundation
 
 public class DocListViewModel: DocListViewModelable {
     
-    let factory: BackendFactory!
+    let factory: BackendFactory
     var docs: [Content]?
     let baseReference: Referenceable?
     var coordinator: DocViewCoordinator?

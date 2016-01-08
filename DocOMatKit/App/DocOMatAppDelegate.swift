@@ -14,7 +14,7 @@ public protocol DocViewCoordinator {
 
 public class SplitViewController: UISplitViewController, UISplitViewControllerDelegate, DocViewCoordinator {
     
-    let viewModel: DocListViewModelable!
+    let viewModel: DocListViewModelable
     let contentViewModel: ContentViewModelable
     
     var masterVC: UIViewController!
@@ -31,7 +31,6 @@ public class SplitViewController: UISplitViewController, UISplitViewControllerDe
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        self.viewModel = nil
         fatalError("init(coder:) has not been implemented")
     }
     

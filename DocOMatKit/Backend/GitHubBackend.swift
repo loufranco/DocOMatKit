@@ -141,16 +141,15 @@ public struct GitHubPersonalAccessAuth: BackendAuth {
 
 public struct GitHubFactory: BackendFactory {
     
-    let rootUrl: NSURL!
+    let rootUrl: NSURL
     let basePath: String?
     let authConfig: Config?
     
     public init?(config: Config?, authConfig: Config?) {
-        guard let urlString = config?.string("url") else {
-            self.rootUrl = nil
+        guard let urlString = config?.string("url"), let url = NSURL(string: urlString) else {
             return nil
         }
-        self.rootUrl = NSURL(string: urlString)
+        self.rootUrl = url
         self.basePath = config?.string("base-path")
         self.authConfig = authConfig
     }
