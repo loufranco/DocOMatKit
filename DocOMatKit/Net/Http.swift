@@ -54,10 +54,16 @@ public struct HttpSynchronous: Http {
         let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)
         components?.queryItems = (components?.queryItems ?? []) + (self.extraQueryItems ?? [])
         
-        guard let url = components?.URL, let data = NSData(contentsOfURL: url) else {
-            return Result<NSData>.Error(DocOMatRetrievalCode.Load.error("Could not get contents of \(components)")) |> reportResult
+        guard let url = components?.URL else {
+            return Result<NSData>.Error(DocOMatRetrievalCode.Load.error("Could not parse URL \(components)")) |> reportResult
         }
-        Result<NSData>(data) |> reportResult
+        do {
+            let data = try NSData(contentsOfURL: url, options: NSDataReadingOptions(rawValue: 0))
+            Result<NSData>(data) |> reportResult
+        } catch let e {
+            return Result<NSData>.Error(e) |> reportResult
+        }
+
     }
 }
     
