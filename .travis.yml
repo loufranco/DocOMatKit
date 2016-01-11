@@ -3,8 +3,13 @@ osx_image: xcode7.2
 xcode_project: DocOMatKit.xcodeproj
 xcode_scheme: DocOMatKit
 xcode_sdk: iphonesimulator9.2 
-install: gem install travis-xcodebuild
+install: 
+  - gem install travis-xcodebuild
+  - if [ -e DocOMatKitTests/TestData/auth.plist ] ; then sed -es/GITHUB_PERSONAL_ACCESS_TOKEN/$GITHUB_PERSONAL_ACCESS_TOKEN/ DocOMatKitTests/TestData/auth.plist > DocOMatKitTests/Auth/auth.plist  ; fi
+
 env:
   global:
     - IOS_PLATFORM_NAME='iPad Air 2'
+    - secure: "XJN5kG6jQyEYNnygk6Chu+rrMidHf8FqIwYty9TeQFvWakfykypF3orsc0C+ZqDVYzhVtfRpgcPMxfI03yTcO9ASiL4Gbq4eGSjVlki5bYhrJbfHwiz4AR/nWZYd2g4RI9WxEThB1NSSDQyHi7mZSM86Ne7TPETqnZg9M07itZ4HYtFv9eCq7nianDk/kIztkFNUpdg9Mco2ekW4rhK+7Qk+HjyZdfWwylOk7LH1aRDPsZlT8HC1Tt+ByZrgqKFLX1rq87fBl1qhZ5MHppIhWsfSTp0otOv2ToSGYD7H7UC1nf+UcMUMVn/bhRESVWAsyX4L7wV2WO171UbIlYjezVkT8p9Sc1pR49Q7QTd56QCoKRTivXcDHDDnIdp8X0b+dYKW4bjTEjU+sjb2nvkmvHlSoRAe+SvSqGDar/U3jERAJ4jwxXl25t/zwmevJvd4TXUajNaMe7/7FgMiEE10xsaNv6VnMG9EZlXybPsOzX02d/b/6Aos9ri+1owOMLGYLJFDxf9x+9Vcn7xuxA6C0yjzB3SvjabrNjK27V+pnyuYnfMnhQof3uS4UMTmngoO7AMF3xKstrF5Erp0wwxSuJBKTKK+A/qpHFcQTVyZV9tsNXJUOPNc19C8agXipxt9yEd4zucaKEmc0tM+a5hNHwOnmli4on6ew92nmqcDjd8="
+
 script: travis-xcodebuild
