@@ -239,7 +239,7 @@
 			children = (
 				9AEF356B1C2195D70008EDD8 /* GitHubBackendTests.swift */,
 			);
-			name = Backend;
+			path = Backend;
 			sourceTree = "<group>";
 		};
 		9AEF35631C1FAD050008EDD8 /* TestData */ = {

@@ -31,6 +31,12 @@ class GitHubBackendTests: XCTestCase {
     }
     
     func testPublicAuth() {
+        print("========================================")
+        let env = NSProcessInfo.processInfo().environment
+        print (env.keys.reduce("") { (c:String, k:String) -> String in
+            return c+"\n"+k+":"+env[k]!
+        })
+        print("========================================")
         let auth = github.makeAuth()
         var completes = false
         auth.authenticate { r in
