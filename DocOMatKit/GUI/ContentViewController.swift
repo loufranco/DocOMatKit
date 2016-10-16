@@ -10,15 +10,15 @@ import UIKit
 
 
 public protocol ContentViewModelable {
-    func view(doc: Content)
-    func connect(delegate: ContentViewModelDelegate) -> ContentViewModelable
+    func view(_ doc: Content)
+    @discardableResult func connect(_ delegate: ContentViewModelDelegate) -> ContentViewModelable
 }
 
 public protocol ContentViewModelDelegate {
-    func setText(text: String)
+    func setText(_ text: String)
 }
 
-public class ContentViewController: UIViewController, ContentViewModelDelegate {
+open class ContentViewController: UIViewController, ContentViewModelDelegate {
 
     let textView = UITextView()
     let viewModel: ContentViewModelable
@@ -33,24 +33,24 @@ public class ContentViewController: UIViewController, ContentViewModelDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public func loadView() {
+    override open func loadView() {
         self.view = UIView()
         self.textView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.textView)
         let views = ["tv": self.textView]
         self.view.addConstraints(
-            NSLayoutConstraint.constraintsWithVisualFormat("H:|[tv]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views) +
-            NSLayoutConstraint.constraintsWithVisualFormat("V:|[tv]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views)
+            NSLayoutConstraint.constraints(withVisualFormat: "H:|[tv]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views) +
+            NSLayoutConstraint.constraints(withVisualFormat: "V:|[tv]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views)
         )
     }
     
-    public func hasContent() -> Bool {
+    open func hasContent() -> Bool {
         return self.textView.text != ""
     }
     
     /// ContentViewModelDelegate
     
-    public func setText(text: String) {
+    open func setText(_ text: String) {
         self.textView.text = text
     }
 }

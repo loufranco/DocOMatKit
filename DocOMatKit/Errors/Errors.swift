@@ -18,14 +18,14 @@ public protocol DocOMatErrorCode {
 }
 
 public extension DocOMatErrorCode where Self: RawRepresentable {
-    public func error() -> ErrorType {
+    public func error() -> Error {
         return error(nil)
     }
     
-    public func error(msg: String?) -> ErrorType {
+    public func error(_ msg: String?) -> Error {
         let userInfo: [String: AnyObject]? = {
             if let msg = msg { 
-                return [ NSLocalizedDescriptionKey: msg ]
+                return [ NSLocalizedDescriptionKey: msg as AnyObject ]
             } else {
                 return nil
             }
@@ -37,12 +37,12 @@ public extension DocOMatErrorCode where Self: RawRepresentable {
 public enum DocOMatAuthCode: Int, DocOMatErrorCode {
     public func domain() -> String { return DocOMatErrorDomain.Auth.rawValue }
 
-    case Failed = -1
+    case failed = -1
 }
 
 public enum DocOMatRetrievalCode: Int, DocOMatErrorCode {
     public func domain() -> String { return DocOMatErrorDomain.Retrieval.rawValue }
 
-    case Parse = -1
-    case Load = -2
+    case parse = -1
+    case load = -2
 }

@@ -9,10 +9,10 @@
 import Foundation
 
 public protocol DocViewCoordinator {
-    func view(doc: Content)
+    func view(_ doc: Content)
 }
 
-public class SplitViewController: UISplitViewController, UISplitViewControllerDelegate, DocViewCoordinator {
+open class SplitViewController: UISplitViewController, UISplitViewControllerDelegate, DocViewCoordinator {
     
     let viewModel: DocListViewModelable
     let contentViewModel: ContentViewModelable
@@ -34,11 +34,11 @@ public class SplitViewController: UISplitViewController, UISplitViewControllerDe
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func prepareViews() {
+    open func prepareViews() {
         let docListVC = DocListViewController(viewModel: self.viewModel, viewCoordinator: self)
         self.contentVC = ContentViewController(viewModel: contentViewModel)
         self.contentVC.navigationItem.leftItemsSupplementBackButton = true
-        self.contentVC.navigationItem.leftBarButtonItem = self.displayModeButtonItem()
+        self.contentVC.navigationItem.leftBarButtonItem = self.displayModeButtonItem
         
         self.masterVC = UINavigationController(rootViewController: docListVC)
         self.detailVC = UINavigationController(rootViewController: self.contentVC)
@@ -48,43 +48,43 @@ public class SplitViewController: UISplitViewController, UISplitViewControllerDe
     
     /// DocViewCoordinator
     
-    public func view(doc: Content) {
+    open func view(_ doc: Content) {
         self.contentViewModel.view(doc)
         self.showDetailViewController(self.detailVC, sender: self)
     }
     
     /// UISplitViewControllerDelegate
     
-    public func splitViewController(splitViewController: UISplitViewController,
-        collapseSecondaryViewController secondaryViewController: UIViewController,
-        ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
+    open func splitViewController(_ splitViewController: UISplitViewController,
+        collapseSecondary secondaryViewController: UIViewController,
+        onto primaryViewController: UIViewController) -> Bool {
             
         return !self.contentVC.hasContent()
     }
     
-    public func primaryViewControllerForCollapsingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
+    open func primaryViewController(forCollapsing splitViewController: UISplitViewController) -> UIViewController? {
         return self.masterVC
     }
     
-    public func primaryViewControllerForExpandingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
+    open func primaryViewController(forExpanding splitViewController: UISplitViewController) -> UIViewController? {
         return self.masterVC
     }
     
-    public func splitViewController(splitViewController: UISplitViewController, separateSecondaryViewControllerFromPrimaryViewController primaryViewController: UIViewController) -> UIViewController? {
+    open func splitViewController(_ splitViewController: UISplitViewController, separateSecondaryFrom primaryViewController: UIViewController) -> UIViewController? {
         return self.detailVC
     }
 
     
 }
 
-public class DocOMatAppDelegate: UIResponder, UIApplicationDelegate {
-    public var window: UIWindow?
+open class DocOMatAppDelegate: UIResponder, UIApplicationDelegate {
+    open var window: UIWindow?
     
-    public func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        self.window = UIWindow(frame: UIScreen.main.bounds)
 
-        let config = PListConfig(name: "doc-o-mat", bundle: NSBundle.mainBundle()).backends()?.dict("doc-o-mat")
-        let authConfig = PListConfig(name: "Auth/auth", bundle: NSBundle.mainBundle()).dict(config?.string("type"))
+        let config = PListConfig(name: "doc-o-mat", bundle: Bundle.main).backends()?.dict("doc-o-mat")
+        let authConfig = PListConfig(name: "Auth/auth", bundle: Bundle.main).dict(config?.string("type"))
 
         guard let vm = DocListViewModel(config: config, authConfig: authConfig)
             else {

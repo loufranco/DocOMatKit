@@ -8,41 +8,41 @@
 
 import Foundation
 
-public typealias MakeErrFn = ([String: AnyObject]?) -> ErrorType
+public typealias MakeErrFn = ([String: AnyObject]?) -> Error
 
 public protocol Http {
-    func get(url: NSURL, reportResult: Result<NSData>.Fn) -> ()
-    func getJson(url: NSURL, reportResult: Result<AnyObject>.Fn)
-    func getJsonAs<T>(url: NSURL, reportResult: Result<T>.Fn)
+    func get(_ url: URL, reportResult: @escaping Result<Data>.Fn) -> ()
+    func getJson(_ url: URL, reportResult: @escaping Result<Any>.Fn)
+    func getJsonAs<T>(_ url: URL, reportResult: @escaping Result<T>.Fn)
 
     var makeErrFn: MakeErrFn { get set }
 }
 
 
 extension Http {
-    public func getJson(url: NSURL, reportResult: Result<AnyObject>.Fn) {
+    public func getJson(_ url: URL, reportResult: @escaping (Result<Any>) -> ()) {
         get(url) { r in
-            r |> { try NSJSONSerialization.JSONObjectWithData($0, options: NSJSONReadingOptions(rawValue: 0)) }
-                |> reportResult
+            r |> { try JSONSerialization.jsonObject(with: $0, options: JSONSerialization.ReadingOptions(rawValue: 0)) }
+              |> reportResult
         }
     }
     
-    public func getJsonAs<T>(url: NSURL, reportResult: Result<T>.Fn) {
+    public func getJsonAs<T>(_ url: URL, reportResult: @escaping Result<T>.Fn) {
         getJson(url) { r in
             r |> { ($0 as? T).result.normalizeError(self.makeErrFn($0 as? [String : AnyObject])) }
-                |> reportResult
+              |> reportResult
         }
     }
 }
 
 public struct HttpSynchronous: Http {
-    public let extraQueryItems: [NSURLQueryItem]?
+    public let extraQueryItems: [URLQueryItem]?
     public var makeErrFn: MakeErrFn
     
-    public init(extraQueryItems: [NSURLQueryItem]?) {
+    public init(extraQueryItems: [URLQueryItem]?) {
         self.extraQueryItems = extraQueryItems
         self.makeErrFn = { _ in
-            return DocOMatRetrievalCode.Parse.error("Unexpected JSON returned")
+            return DocOMatRetrievalCode.parse.error("Unexpected JSON returned")
         }
     }
     
@@ -50,18 +50,18 @@ public struct HttpSynchronous: Http {
         self.init(extraQueryItems: nil)
     }
     
-    public func get(url: NSURL, reportResult: Result<NSData>.Fn) -> () {
-        let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)
+    public func get(_ url: URL, reportResult: @escaping Result<Data>.Fn) -> () {
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         components?.queryItems = (components?.queryItems ?? []) + (self.extraQueryItems ?? [])
         
-        guard let url = components?.URL else {
-            return Result<NSData>.Error(DocOMatRetrievalCode.Load.error("Could not parse URL \(components)")) |> reportResult
+        guard let url = components?.url else {
+            return Result<Data>.error(DocOMatRetrievalCode.load.error("Could not parse URL \(components)")) |> reportResult
         }
         do {
-            let data = try NSData(contentsOfURL: url, options: NSDataReadingOptions(rawValue: 0))
-            Result<NSData>(data) |> reportResult
+            let data = try Data(contentsOf: url, options: NSData.ReadingOptions(rawValue: 0))
+            Result<Data>(data) |> reportResult
         } catch let e {
-            return Result<NSData>.Error(e) |> reportResult
+            return Result<Data>.error(e) |> reportResult
         }
 
     }

@@ -11,21 +11,21 @@ import Foundation
 
 public protocol DocListViewModelDelegate {
     func reloadData()
-    func reloadRow(row: Int)
-    func reportError(e: NSError)
-    func navigateTo(childViewModel: DocListViewModelable)
+    func reloadRow(_ row: Int)
+    func reportError(_ e: NSError)
+    func navigateTo(_ childViewModel: DocListViewModelable)
 }
 
 public protocol DocListViewModelable {
     var title: String { get }
     
     func docCount() -> Int
-    func docTitle(index: Int) -> String
-    func docCanHaveChildren(index: Int) -> Bool
-    func docSelected(index: Int)
+    func docTitle(_ index: Int) -> String
+    func docCanHaveChildren(_ index: Int) -> Bool
+    func docSelected(_ index: Int)
     
-    func connect(delegate delegate: DocListViewModelDelegate) -> DocListViewModelable
-    func connect(coordinator coordinator: DocViewCoordinator) -> DocListViewModelable
+    @discardableResult func connect(delegate: DocListViewModelDelegate) -> DocListViewModelable
+    @discardableResult func connect(coordinator: DocViewCoordinator) -> DocListViewModelable
 }
 
 class DocListViewController: UITableViewController, DocListViewModelDelegate {
@@ -37,7 +37,7 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
     init(viewModel: DocListViewModelable, viewCoordinator: DocViewCoordinator) {
         self.viewModel = viewModel
         self.viewCoordinator = viewCoordinator
-        super.init(style: .Plain)
+        super.init(style: .plain)
         self.title = viewModel.title
     }
 
@@ -50,7 +50,7 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
         self.viewModel.connect(delegate: self)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if let e = self.unreportedError {
             self.unreportedError = nil
@@ -60,26 +60,26 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
     
     /// UITableViewDelegate/DataSource
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.docCount()
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let id = "DocCell"
-        let cell = tableView.dequeueReusableCellWithIdentifier(id) ??
-                    UITableViewCell(style: .Default, reuseIdentifier: id)
-        cell.textLabel?.text = viewModel.docTitle(indexPath.row)
-        cell.accessoryType = viewModel.docCanHaveChildren(indexPath.row) ? .DisclosureIndicator : .None
+        let cell = tableView.dequeueReusableCell(withIdentifier: id) ??
+                    UITableViewCell(style: .default, reuseIdentifier: id)
+        cell.textLabel?.text = viewModel.docTitle((indexPath as NSIndexPath).row)
+        cell.accessoryType = viewModel.docCanHaveChildren((indexPath as NSIndexPath).row) ? .disclosureIndicator : .none
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        viewModel.docSelected(indexPath.row)
-        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.docSelected((indexPath as NSIndexPath).row)
+        self.tableView.deselectRow(at: indexPath, animated: true)
     }
     
     /// DocListViewModelDelegate
@@ -88,19 +88,19 @@ class DocListViewController: UITableViewController, DocListViewModelDelegate {
         self.tableView.reloadData()
     }
     
-    func reloadRow(row: Int) {
-        self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: row, inSection: 0)], withRowAnimation: .Automatic)
+    func reloadRow(_ row: Int) {
+        self.tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
     }
     
-    func navigateTo(childViewModel: DocListViewModelable) {
+    func navigateTo(_ childViewModel: DocListViewModelable) {
         self.navigationController?.pushViewController(DocListViewController(viewModel: childViewModel, viewCoordinator: self.viewCoordinator), animated: true)
     }
     
-    func reportError(e: NSError) {
+    func reportError(_ e: NSError) {
         if let _ = self.view.superview {
-            let alert = UIAlertController(title: "Error", message: e.localizedDescription, preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "Error", message: e.localizedDescription, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         } else {
             self.unreportedError = e
         }

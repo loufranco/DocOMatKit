@@ -10,8 +10,8 @@ import XCTest
 import DocOMatKit
 
 
-func XCTAssertResultSuccess<T>(result: Result<T>) {
-    if case let .Error(e) = result {
+func XCTAssertResultSuccess<T>(_ result: Result<T>) {
+    if case let .error(e) = result {
         XCTFail("Unexpected error: \(e)")
     }
 }
@@ -27,32 +27,32 @@ class GitHubBackendTests: XCTestCase {
     ]
     
     override func setUp() {
-        let authConfig = PListConfig(name: "Auth/auth", bundle: NSBundle(forClass: GitHubBackendTests.self)).dict("GitHub")
-        github = GitHubFactory(config: ConfigWithDictionary(configDict: config), authConfig: authConfig)
+        let authConfig = PListConfig(name: "Auth/auth", bundle: Bundle(for: GitHubBackendTests.self)).dict("GitHub")
+        github = GitHubFactory(config: ConfigWithDictionary(configDict: config as [String : AnyObject]), authConfig: authConfig)
     }
     
     func testPublicAuth() {
         let auth = github.makeAuth()
         var completes = false
         auth.authenticate { r in
-            if case .Success = r {
+            if case .success = r {
                 completes = true
             }
         }
         XCTAssert(completes)
     }
     
-    func checkRefList(list: [Referenceable]) -> Result<()> {
+    func checkRefList(_ list: [Referenceable]) -> Result<()> {
         XCTAssert(list.count > 0)
         for l in list {
             XCTAssert(l.referenceName.hasPrefix("docs/0"))
         }
-        return .Success(())
+        return .success(())
     }
     
-    func checkDocTitle(doc: Content) -> Result<()> {
+    func checkDocTitle(_ doc: Content) -> Result<()> {
         XCTAssertNotEqual(doc.title, "")
-        return .Success(())
+        return .success(())
     }
 
     func testGetList() {
@@ -64,7 +64,7 @@ class GitHubBackendTests: XCTestCase {
                     XCTAssertResultSuccess(listResult |> self.checkRefList)
                     completes = true
                 }
-                return .Success(())
+                return .success(())
             }
         }
         XCTAssert(completes)
@@ -80,7 +80,7 @@ class GitHubBackendTests: XCTestCase {
                     XCTAssertResultSuccess(doc |> self.checkDocTitle)
                     completes = true
                 }
-                return .Success(())
+                return .success(())
             }
         }
         XCTAssert(completes)

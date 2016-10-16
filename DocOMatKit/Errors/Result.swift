@@ -11,129 +11,145 @@ import Foundation
 public enum Result<T> {
     public typealias Fn = (Result<T>) -> ()
     
-    case Success(T)
-    case Error(ErrorType)
+    case success(T)
+    case error(Error)
     
-    public func flatMap<B>(f: (T) -> Result<B>) -> Result<B> {
+    public func flatMap<B>(_ f: (T) -> Result<B>) -> Result<B> {
         switch (self) {
-        case Success(let t):
+        case .success(let t):
             return f(t)
-        case Error(let e):
-            return .Error(e)
+        case .error(let e):
+            return .error(e)
         }
     }
     
-    public func flatMap<B>(f: (T) throws -> Result<B>) -> Result<B> {
+    public func flatMap<B>(_ f: (T) throws -> Result<B>) -> Result<B> {
         switch (self) {
-        case Success(let t):
+        case .success(let t):
             do {
                 return try f(t)
             } catch let e {
-                return .Error(e)
+                return .error(e)
             }
-        case Error(let e):
-            return .Error(e)
+        case .error(let e):
+            return .error(e)
         }
     }
     
-    public func map<B>(f: (T) -> B) -> Result<B> {
+    public func map<B>(_ f: (T) -> B) -> Result<B> {
         switch (self) {
-        case Success(let t):
-            return .Success(f(t))
-        case Error(let e):
-            return .Error(e)
+        case .success(let t):
+            return .success(f(t))
+        case .error(let e):
+            return .error(e)
         }
     }
     
-    public func mapOptional<B>(f: (T) -> B?) -> Result<B> {
+    public func mapOptional<B>(_ f: (T) -> B?) -> Result<B> {
         switch (self) {
-        case Success(let t):
+        case .success(let t):
             return Result<B>(f(t))
-        case Error(let e):
-            return .Error(e)
+        case .error(let e):
+            return .error(e)
         }
     }
     
-    public func map<B>(f: (T) throws -> B) -> Result<B> {
+    public func map<B>(_ f: (T) throws -> B) -> Result<B> {
         switch (self) {
-        case Success(let t):
+        case .success(let t):
             do {
-                return try .Success(f(t))
+                return try .success(f(t))
             } catch let e {
-                return .Error(e)
+                return .error(e)
             }
-        case Error(let e):
-            return .Error(e)
+        case .error(let e):
+            return .error(e)
         }
     }
 
-    public func onError(f: (ErrorType) -> ()) -> Result<T> {
-        if case let .Error(e) = self {
+    @discardableResult
+    public func onError(_ f: (Error) -> ()) -> Result<T> {
+        if case let .error(e) = self {
             f(e)
         }
         return self
     }
     
-    public init(_ t: T?, error: ErrorType) {
+    public init(_ t: T?, error: Error) {
         if let t = t {
-            self = .Success(t)
+            self = .success(t)
         } else {
-            self = .Error(error)
+            self = .error(error)
         }
     }
     
     public init(_ t: T?) {
         if let t = t {
-            self = .Success(t)
+            self = .success(t)
         } else {
-            self = .Error(NSError(domain: "", code: 0, userInfo: nil))
+            self = .error(NSError(domain: "", code: 0, userInfo: nil))
         }
     }
     
-    public func normalizeError(error: ErrorType) -> Result<T> {
-        if case .Error(_) = self {
-            return .Error(error)
+    public func normalizeError(_ error: Error) -> Result<T> {
+        if case .error(_) = self {
+            return .error(error)
         }
         return self
     }
 }
 
-infix operator |> { associativity left precedence 140 }
+precedencegroup ResultOperatorsGroup {
+    higherThan: DefaultPrecedence
+    associativity: left
+}
+
+infix operator |> : ResultOperatorsGroup
+
+@discardableResult
 public func |><A, B> (left: Result<A>, right: (A) -> Result<B>) -> Result<B> {
     return left.flatMap(right)
 }
 
+@discardableResult
 public func |><A, B> (left: Result<A>, right: (A) throws -> Result<B>) -> Result<B> {
     return left.flatMap(right)
 }
 
+@discardableResult
 public func |><A, B> (left: A?, right: (A) -> Result<B>) -> Result<B> {
     return Result<A>(left).flatMap(right)
 }
 
+@discardableResult
 public func |><A, B> (left: Result<A>, right: (A) -> B) -> Result<B> {
     return left.map(right)
 }
 
+@discardableResult
 public func |><A, B> (left: Result<A>, right: (A) throws -> B) -> Result<B> {
     return left.map(right)
 }
 
+@discardableResult
 public func |><A, B> (left: Result<A>, right: (A) -> B?) -> Result<B> {
     return left.mapOptional(right)
 }
 
+@discardableResult
 public func |><A, B> (left: A?, right: (A) -> B?) -> Result<B> {
     return Result<A>(left).mapOptional(right)
 }
 
-
+@discardableResult
 public func |><A> (left: Result<A>, right: Result<A>.Fn) -> () {
     return right(left)
 }
 
-infix operator !!> { associativity left precedence 140 }
-public func !!><A> (left: Result<A>, right: (ErrorType) -> ()) -> Result<A> {
+infix operator !!> : ResultOperatorsGroup
+
+@discardableResult
+public func !!><A> (left: Result<A>, right: (Error) -> ()) -> Result<A> {
     return left.onError(right)
 }
 

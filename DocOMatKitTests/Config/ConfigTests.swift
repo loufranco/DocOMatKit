@@ -12,7 +12,7 @@ import DocOMatKit
 class ConfigTests: XCTestCase {
 
     func testLoadPlist() {
-        let config = PListConfig(name: "test-config", bundle: NSBundle(forClass: ConfigTests.self))
+        let config = PListConfig(name: "test-config", bundle: Bundle(for: ConfigTests.self))
         guard let backends = config.backends() else {
             XCTFail("Expect a backend")
             return

@@ -8,16 +8,16 @@
 
 import Foundation
 
-public class ContentViewModel: ContentViewModelable {
+open class ContentViewModel: ContentViewModelable {
     
     var delegate: ContentViewModelDelegate?
     
-    public func view(doc: Content) {
+    open func view(_ doc: Content) {
         guard let delegate = self.delegate else { return }
         delegate.setText(doc.content)
     }
     
-    public func connect(delegate: ContentViewModelDelegate) ->ContentViewModelable {
+    open func connect(_ delegate: ContentViewModelDelegate) ->ContentViewModelable {
         self.delegate = delegate
         return self
     }

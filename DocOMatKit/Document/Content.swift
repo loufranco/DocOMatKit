@@ -12,13 +12,13 @@ import Foundation
 public protocol Referenceable {
     var referenceName: String { get }
     func title() -> String
-    func get(reportResult: Result<Content>.Fn)
+    func get(_ reportResult: @escaping Result<Content>.Fn)
     func canHaveChildren() -> Bool
 }
 
 extension Referenceable {
     public func title() -> String {
-        return NSURL(string: self.referenceName)?.lastPathComponent ?? self.referenceName ?? ""
+        return URL(string: self.referenceName)?.lastPathComponent ?? self.referenceName
     }
     
     public func canHaveChildren() -> Bool {
@@ -28,8 +28,8 @@ extension Referenceable {
 
 public struct NullContentReference: Referenceable {
     public let referenceName: String = ""
-    public func get(reportResult: Result<Content>.Fn) {
-        reportResult(Result<Content>.Success(EmptyContent()))
+    public func get(_ reportResult: @escaping Result<Content>.Fn) {
+        reportResult(Result<Content>.success(EmptyContent()))
     }
 }
 
@@ -42,7 +42,7 @@ public struct ContentReference: Referenceable {
         self.referenceName = referenceName
     }
     
-    public func get(reportResult: Result<Content>.Fn) {
+    public func get(_ reportResult: @escaping Result<Content>.Fn) {
         self.docRetrieval.get(self, reportResult: reportResult)
     }
 }
@@ -56,7 +56,7 @@ public struct FolderReference: Referenceable {
         self.referenceName = referenceName
     }
     
-    public func get(reportResult: Result<Content>.Fn) {
+    public func get(_ reportResult: @escaping Result<Content>.Fn) {
         self.docRetrieval.getAsFolder(self, reportResult: reportResult)
     }
     
@@ -70,7 +70,7 @@ public protocol Content {
     var content: String { get }
     var reference: Referenceable { get }
     
-    func getChildren(reportResult: Result<[Referenceable]>.Fn)
+    func getChildren(_ reportResult: Result<[Referenceable]>.Fn)
     func canHaveChildren() -> Bool
 }
 
@@ -89,8 +89,8 @@ public struct EmptyContent: Content {
         self.reference = NullContentReference()
     }
     
-    public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
-        reportResult(Result<[Referenceable]>.Success([]))
+    public func getChildren(_ reportResult: Result<[Referenceable]>.Fn) {
+        reportResult(Result<[Referenceable]>.success([]))
     }
 }
 
@@ -99,14 +99,14 @@ public struct ErrorContent: Content {
     public let content = ""
     public var reference: Referenceable
     
-    public init(error: ErrorType, reference: Referenceable) {
+    public init(error: Error, reference: Referenceable) {
         let nsError = error as NSError
         self.title = nsError.localizedDescription
         self.reference = reference
     }
     
-    public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
-        reportResult(Result<[Referenceable]>.Success([]))
+    public func getChildren(_ reportResult: Result<[Referenceable]>.Fn) {
+        reportResult(Result<[Referenceable]>.success([]))
     }
 }
 
@@ -126,8 +126,8 @@ public struct ContentFolder: Content {
         return true
     }
     
-    public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
-        reportResult(Result<[Referenceable]>.Success([]))
+    public func getChildren(_ reportResult: Result<[Referenceable]>.Fn) {
+        reportResult(Result<[Referenceable]>.success([]))
     }
 }
 
@@ -137,8 +137,8 @@ public protocol File: Content {
 }
 
 public extension File {
-    public func getChildren(reportResult: Result<[Referenceable]>.Fn) {
-        reportResult(Result<[Referenceable]>.Success([]))
+    public func getChildren(_ reportResult: Result<[Referenceable]>.Fn) {
+        reportResult(Result<[Referenceable]>.success([]))
     }
 }
 
@@ -147,7 +147,7 @@ public struct MarkdownDocument: File {
     public let content: String
     public let reference: Referenceable
 
-    static func titleFromContent(content: String) -> String {
+    static func titleFromContent(_ content: String) -> String {
         return String(content.characters.dropWhile { ["#", " "].contains($0) }.takeWhile { $0 != "\n" })
     }
     

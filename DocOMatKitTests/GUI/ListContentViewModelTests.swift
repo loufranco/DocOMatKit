@@ -59,21 +59,21 @@ class ListContentViewModelTests: XCTestCase, DocListViewModelDelegate, DocViewCo
         
     }
     
-    func reloadRow(row: Int) {
+    func reloadRow(_ row: Int) {
         
     }
     
-    func reportError(e: NSError){
+    func reportError(_ e: NSError){
         self.lastError = e
     }
     
-    func navigateTo(childViewModel: DocListViewModelable) {
+    func navigateTo(_ childViewModel: DocListViewModelable) {
         self.lastVM = childViewModel
     }
     
     /// Default Clipboard Text
    
-    func view(doc: Content) {
+    func view(_ doc: Content) {
         self.lastDoc = doc
     }
     

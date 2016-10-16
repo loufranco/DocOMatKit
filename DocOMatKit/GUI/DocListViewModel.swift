@@ -9,14 +9,14 @@
 import Foundation
 
 
-public class DocListViewModel: DocListViewModelable {
+open class DocListViewModel: DocListViewModelable {
     
     let factory: BackendFactory
     var docs: [Content]?
     let baseReference: Referenceable?
     var coordinator: DocViewCoordinator?
     
-    public let title: String
+    open let title: String
     
     var delegate: DocListViewModelDelegate?
     
@@ -33,41 +33,45 @@ public class DocListViewModel: DocListViewModelable {
         self.baseReference = baseReference
     }
 
-    private func loadDocs(docRetrieval: BackendDocRetrieval)(list: [Referenceable]) -> Result<()> {
-        self.docs = Array<Content>.init(count: list.count, repeatedValue: EmptyContent())
+    fileprivate func loadDocs(_ docRetrieval: BackendDocRetrieval, _ list: [Referenceable]) -> Result<()> {
+        self.docs = Array<Content>.init(repeating: EmptyContent(), count: list.count)
         self.delegate?.reloadData()
         for i in 0..<list.count {
             list[i].get() { [weak self] docResult in
                 (docResult
                     |> { (doc: Content) -> Result<()> in
-                    guard let strongSelf = self else { return .Success(()) }
+                    guard let strongSelf = self else { return .success(()) }
                     strongSelf.docs?[i] = doc
                     strongSelf.delegate?.reloadRow(i)
-                    return .Success(())
+                    return .success(())
                 })
-                .onError { (e: ErrorType) in
+                .onError { (e: Error) in
                     guard let strongSelf = self else { return }
                     strongSelf.docs?[i] = ErrorContent(error: e, reference: list[i])
                     strongSelf.delegate?.reloadRow(i)
                 }
             }
         }
-        return .Success(())
+        return .success(())
+    }
+
+    fileprivate func loadDocs(_ docRetrieval: BackendDocRetrieval) -> (_ list: [Referenceable]) -> Result<()> {
+        return { (_ list: [Referenceable]) in self.loadDocs(docRetrieval, list) }
     }
     
-    public func docCount() -> Int {
+    open func docCount() -> Int {
         return self.docs?.count ?? 0
     }
     
-    public func docTitle(index: Int) -> String {
+    open func docTitle(_ index: Int) -> String {
         return self.docs?[index].title ?? ""
     }
     
-    public func docCanHaveChildren(index: Int) -> Bool {
+    open func docCanHaveChildren(_ index: Int) -> Bool {
         return self.docs?[index].canHaveChildren() ?? false
     }
     
-    public func docSelected(index: Int) {
+    open func docSelected(_ index: Int) {
         if docCanHaveChildren(index) {
             self.delegate?.navigateTo(self.childModel(index))
         } else {
@@ -77,12 +81,12 @@ public class DocListViewModel: DocListViewModelable {
         }
     }
     
-    private func childModel(index: Int) -> DocListViewModelable {
+    fileprivate func childModel(_ index: Int) -> DocListViewModelable {
         let ref = self.docs?[index].reference
         return DocListViewModel(title: ref?.title() ?? self.title, factory: self.factory, baseReference: ref).connect(coordinator: self.coordinator!)
     }
     
-    public func connect(delegate delegate: DocListViewModelDelegate) -> DocListViewModelable {
+    open func connect(delegate: DocListViewModelDelegate) -> DocListViewModelable {
         self.delegate = delegate
         
         self.factory.makeAuth().authenticate { [weak self] docRetrievalResult in
@@ -93,7 +97,7 @@ public class DocListViewModel: DocListViewModelable {
                     listResult |> strongSelf.loadDocs(docRetrieval)
                     listResult.onError { e in strongSelf.delegate?.reportError(e as NSError) }
                 }
-                return .Success(())
+                return .success(())
             }
             docRetrievalResult.onError { e in strongSelf.delegate?.reportError(e as NSError) }
         }
@@ -103,7 +107,7 @@ public class DocListViewModel: DocListViewModelable {
     
     /// DocListContentViewDelegate
     
-    public func connect(coordinator coordinator: DocViewCoordinator) -> DocListViewModelable {
+    open func connect(coordinator: DocViewCoordinator) -> DocListViewModelable {
         self.coordinator = coordinator
         return self
     }

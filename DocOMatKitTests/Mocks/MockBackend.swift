@@ -10,25 +10,25 @@ import Foundation
 import DocOMatKit
 
 struct MockDocFormatter: BackendDocFormatter {
-    func formatAsHtml(doc: File) -> String {
+    func formatAsHtml(_ doc: File) -> String {
         return doc.content
     }
 }
 
 struct MockDocRetrieval: BackendDocRetrieval {
-    func getList(reportResult: Result<[Referenceable]>.Fn) {
+    public func getList(_ reportResult: @escaping Result<[Referenceable]>.Fn) {
         getList(nil, reportResult: reportResult)
     }
     
-    func getList(ref: Referenceable?, reportResult: Result<[Referenceable]>.Fn) {
+    public func getList(_ ref: Referenceable?, reportResult: @escaping Result<[Referenceable]>.Fn) {
         switch (ref?.referenceName) {
-        case .None:
+        case .none:
             reportResult(Result<[Referenceable]>( [
                     FolderReference(docRetrieval: self, referenceName: "folder"),
                     ContentReference(docRetrieval: self, referenceName: "file-1")
                 ]))
             return
-        case .Some("folder"):
+        case .some("folder"):
             reportResult(Result<[Referenceable]>([
                 ContentReference(docRetrieval: self, referenceName: "folder-file-1"),
                 ContentReference(docRetrieval: self, referenceName: "folder-file-2")
@@ -39,11 +39,11 @@ struct MockDocRetrieval: BackendDocRetrieval {
         }
     }
     
-    func get(ref: Referenceable, reportResult: Result<Content>.Fn) {
+    public func get(_ ref: Referenceable, reportResult: @escaping Result<Content>.Fn) {
         reportResult(Result<Content>(UnknownFile(title: ref.referenceName, content: ref.referenceName, reference: ref)))
     }
     
-    func getAsFolder(ref: Referenceable, reportResult: Result<Content>.Fn) {
+    public func getAsFolder(_ ref: Referenceable, reportResult: @escaping Result<Content>.Fn) {
         reportResult(Result<Content>(ContentFolder(title: ref.referenceName, content: ref.referenceName, reference: ref)))
     }
 }
