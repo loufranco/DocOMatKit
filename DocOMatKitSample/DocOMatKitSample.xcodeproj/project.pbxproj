@@ -8,22 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		9A25B6991C358193001F7C23 /* Auth in Resources */ = {isa = PBXBuildFile; fileRef = 9A25B6981C358193001F7C23 /* Auth */; };
+		9A4382EC1DE70FB000EB6415 /* DocOMatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A4382EB1DE70FB000EB6415 /* DocOMatKit.framework */; };
 		9A5BCD9C1C1E0034003516CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5BCD9B1C1E0034003516CF /* AppDelegate.swift */; };
 		9A5BCDA31C1E0034003516CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A5BCDA21C1E0034003516CF /* Assets.xcassets */; };
 		9A5BCDA61C1E0034003516CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A5BCDA41C1E0034003516CF /* LaunchScreen.storyboard */; };
 		9A5BCDB81C1E0342003516CF /* doc-o-mat.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9A5BCDB71C1E0342003516CF /* doc-o-mat.plist */; };
-		9AF2968C1DB42476004EE7E4 /* DocOMatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF2968B1DB42476004EE7E4 /* DocOMatKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		9A25B6981C358193001F7C23 /* Auth */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Auth; sourceTree = "<group>"; };
+		9A4382EB1DE70FB000EB6415 /* DocOMatKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DocOMatKit.framework; path = "../../../Library/Developer/Xcode/DerivedData/DocOMatKit-dvoyektsrpqimgcsvpmkxkcvyjcw/Build/Products/Debug-iphonesimulator/DocOMatKit.framework"; sourceTree = "<group>"; };
 		9A5BCD981C1E0034003516CF /* DocOMatKitSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DocOMatKitSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A5BCD9B1C1E0034003516CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A5BCDA21C1E0034003516CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9A5BCDA51C1E0034003516CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9A5BCDA71C1E0034003516CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9A5BCDB71C1E0342003516CF /* doc-o-mat.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "doc-o-mat.plist"; sourceTree = "<group>"; };
-		9AF2968B1DB42476004EE7E4 /* DocOMatKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DocOMatKit.framework; path = "../../../Library/Developer/Xcode/DerivedData/DocOMatKit-emowelxsjrqotqfrgxnlqnpkenwl/Build/Products/Debug-iphonesimulator/DocOMatKit.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,7 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9AF2968C1DB42476004EE7E4 /* DocOMatKit.framework in Frameworks */,
+				9A4382EC1DE70FB000EB6415 /* DocOMatKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,7 +71,7 @@
 		9A5BCDBE1C1E06CD003516CF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9AF2968B1DB42476004EE7E4 /* DocOMatKit.framework */,
+				9A4382EB1DE70FB000EB6415 /* DocOMatKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
