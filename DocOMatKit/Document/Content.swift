@@ -17,6 +17,7 @@ public protocol Referenceable {
 }
 
 extension Referenceable {
+
     public func title() -> String {
         return URL(string: self.referenceName)?.lastPathComponent ?? self.referenceName
     }
@@ -24,13 +25,16 @@ extension Referenceable {
     public func canHaveChildren() -> Bool {
         return false
     }
+
 }
 
 public struct NullContentReference: Referenceable {
     public let referenceName: String = ""
+
     public func get(_ reportResult: @escaping Result<Content>.Fn) {
         reportResult(Result<Content>.success(EmptyContent()))
     }
+
 }
 
 public struct ContentReference: Referenceable {
@@ -45,6 +49,7 @@ public struct ContentReference: Referenceable {
     public func get(_ reportResult: @escaping Result<Content>.Fn) {
         self.docRetrieval.get(self, reportResult: reportResult)
     }
+
 }
 
 public struct FolderReference: Referenceable {
@@ -63,6 +68,7 @@ public struct FolderReference: Referenceable {
     public func canHaveChildren() -> Bool {
         return true
     }
+
 }
 
 public protocol Content {
@@ -75,9 +81,11 @@ public protocol Content {
 }
 
 extension Content {
+
     public func canHaveChildren() -> Bool {
         return false
     }
+
 }
 
 public struct EmptyContent: Content {
@@ -92,6 +100,7 @@ public struct EmptyContent: Content {
     public func getChildren(_ reportResult: Result<[Referenceable]>.Fn) {
         reportResult(Result<[Referenceable]>.success([]))
     }
+
 }
 
 public struct ErrorContent: Content {
@@ -108,6 +117,7 @@ public struct ErrorContent: Content {
     public func getChildren(_ reportResult: Result<[Referenceable]>.Fn) {
         reportResult(Result<[Referenceable]>.success([]))
     }
+
 }
 
 /// Folders
@@ -129,6 +139,7 @@ public struct ContentFolder: Content {
     public func getChildren(_ reportResult: Result<[Referenceable]>.Fn) {
         reportResult(Result<[Referenceable]>.success([]))
     }
+
 }
 
 /// Defines documents
@@ -137,9 +148,11 @@ public protocol File: Content {
 }
 
 public extension File {
+
     public func getChildren(_ reportResult: Result<[Referenceable]>.Fn) {
         reportResult(Result<[Referenceable]>.success([]))
     }
+
 }
 
 public struct MarkdownDocument: File {

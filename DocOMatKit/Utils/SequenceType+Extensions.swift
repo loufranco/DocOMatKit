@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal class _TakeSequence<Base : IteratorProtocol> : Sequence, IteratorProtocol {
+internal class TakeSequence<Base: IteratorProtocol>: Sequence, IteratorProtocol {
     internal let pred: (Base.Element) -> Bool
     internal var generator: Base
 
@@ -17,13 +17,13 @@ internal class _TakeSequence<Base : IteratorProtocol> : Sequence, IteratorProtoc
         self.pred = pred
     }
 
-    internal func makeIterator() -> _TakeSequence<Base> {
+    internal func makeIterator() -> TakeSequence<Base> {
         return self
     }
 
     internal func next() -> Base.Element? {
         if let next = generator.next() {
-            if (self.pred(next)) {
+            if self.pred(next) {
                 return next
             } else {
                 return nil
@@ -32,9 +32,10 @@ internal class _TakeSequence<Base : IteratorProtocol> : Sequence, IteratorProtoc
 
         return nil
     }
+
 }
 
-internal class _DropSequence<Base : IteratorProtocol> : Sequence, IteratorProtocol {
+internal class DropSequence<Base: IteratorProtocol>: Sequence, IteratorProtocol {
     internal let pred: (Base.Element) -> Bool
     internal var generator: Base
     internal var dropping = true
@@ -44,29 +45,32 @@ internal class _DropSequence<Base : IteratorProtocol> : Sequence, IteratorProtoc
         self.pred = pred
     }
 
-    internal func makeIterator() -> _DropSequence<Base> {
+    internal func makeIterator() -> DropSequence<Base> {
         return self
     }
 
     internal func next() -> Base.Element? {
         while dropping {
             guard let next = generator.next() else { return nil }
-            if (!self.pred(next)) {
+            if !self.pred(next) {
                 dropping = false
                 return next
             }
         }
         return generator.next()
     }
+
 }
 
 
 extension Sequence {
+
     public func takeWhile(_ pred: @escaping (Iterator.Element) -> Bool) -> AnySequence<Iterator.Element> {
-        return AnySequence(_TakeSequence(makeIterator(), pred: pred))
+        return AnySequence(TakeSequence(makeIterator(), pred: pred))
     }
 
     public func dropWhile(_ pred: @escaping (Iterator.Element) -> Bool) -> AnySequence<Iterator.Element> {
-        return AnySequence(_DropSequence(makeIterator(), pred: pred))
+        return AnySequence(DropSequence(makeIterator(), pred: pred))
     }
+
 }

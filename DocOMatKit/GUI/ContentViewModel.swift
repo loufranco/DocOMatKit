@@ -17,8 +17,9 @@ open class ContentViewModel: ContentViewModelable {
         delegate.setText(doc.content)
     }
 
-    open func connect(_ delegate: ContentViewModelDelegate) ->ContentViewModelable {
+    open func connect(_ delegate: ContentViewModelDelegate) -> ContentViewModelable {
         self.delegate = delegate
         return self
     }
+
 }

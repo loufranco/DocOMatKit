@@ -9,8 +9,8 @@
 import Foundation
 
 public enum DocOMatErrorDomain: String {
-    case Auth = "com.loufranco.DocOMat.AuthErrorDomain"
-    case Retrieval = "com.loufranco.DocOMat.RetrievalErrorDomain"
+    case auth = "com.loufranco.DocOMat.AuthErrorDomain"
+    case retrieval = "com.loufranco.DocOMat.RetrievalErrorDomain"
 }
 
 public protocol DocOMatErrorCode {
@@ -18,6 +18,7 @@ public protocol DocOMatErrorCode {
 }
 
 public extension DocOMatErrorCode where Self: RawRepresentable {
+
     public func error() -> Error {
         return error(nil)
     }
@@ -30,18 +31,25 @@ public extension DocOMatErrorCode where Self: RawRepresentable {
                 return nil
             }
         }()
-        return NSError(domain: self.domain(), code: self.rawValue as! Int, userInfo: userInfo)
+        return NSError(domain: self.domain(), code: (self.rawValue as? Int) ?? 0, userInfo: userInfo)
     }
+
 }
 
 public enum DocOMatAuthCode: Int, DocOMatErrorCode {
-    public func domain() -> String { return DocOMatErrorDomain.Auth.rawValue }
+
+    public func domain() -> String {
+        return DocOMatErrorDomain.auth.rawValue
+    }
 
     case failed = -1
 }
 
 public enum DocOMatRetrievalCode: Int, DocOMatErrorCode {
-    public func domain() -> String { return DocOMatErrorDomain.Retrieval.rawValue }
+
+    public func domain() -> String {
+        return DocOMatErrorDomain.retrieval.rawValue
+    }
 
     case parse = -1
     case load = -2

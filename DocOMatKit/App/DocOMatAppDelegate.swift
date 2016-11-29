@@ -97,4 +97,5 @@ open class DocOMatAppDelegate: UIResponder, UIApplicationDelegate {
 
         return true
     }
+
 }

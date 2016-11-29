@@ -37,7 +37,7 @@ open class DocListViewModel: DocListViewModelable {
         self.docs = Array<Content>.init(repeating: EmptyContent(), count: list.count)
         self.delegate?.reloadData()
         for i in 0..<list.count {
-            list[i].get() { [weak self] docResult in
+            list[i].get { [weak self] docResult in
                 (docResult
                     |> { (doc: Content) -> Result<()> in
                     guard let strongSelf = self else { return .success(()) }

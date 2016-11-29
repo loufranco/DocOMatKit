@@ -12,7 +12,7 @@ import DocOMatKit
 @UIApplicationMain
 class AppDelegate: DocOMatAppDelegate {
 
-    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]?) -> Bool {
+    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
@@ -38,6 +38,4 @@ class AppDelegate: DocOMatAppDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
 }
-

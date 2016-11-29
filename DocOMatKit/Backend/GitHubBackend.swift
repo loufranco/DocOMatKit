@@ -11,15 +11,19 @@ import Foundation
 /// Defines the types needed to get documentation from GitHub
 
 public struct GitHubPrivateAuth: BackendAuth {
+
     public func authenticate(_ reportResult: Result<BackendDocRetrieval>.Fn) {
         reportResult(.error(DocOMatAuthCode.failed.error("Private GitHub not implemented")))
     }
+
 }
 
 public struct GitHubDocFormatter: BackendDocFormatter {
+
     public func formatAsHtml(_ doc: File) -> String {
         return doc.content
     }
+
 }
 
 public struct GitHubDocRetrieval: BackendDocRetrieval {
@@ -35,7 +39,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     }
 
     public func makeGitHubError(_ response: [String: AnyObject]?) -> Error {
-        switch (response?["message"] as? String) {
+        switch response?["message"] as? String {
         case .some(let msg):
             return DocOMatRetrievalCode.parse.error(msg)
         default:
@@ -49,7 +53,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
             let type = dict["type"] as? String else {
                 throw DocOMatRetrievalCode.parse.error("Unexpected JSON returned: \(json)")
         }
-        switch (type) {
+        switch type {
         case "file":
             return ContentReference(docRetrieval: self, referenceName: path)
         case "dir":
@@ -105,7 +109,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     }
 
     fileprivate func parseContentResponse(_ ref: Referenceable, response: [String: AnyObject]) -> Result<Content> {
-        switch (response["type"] as? String) {
+        switch response["type"] as? String {
         case .none:
             return .error(makeGitHubError(response))
         case .some("dir"):
@@ -126,6 +130,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     public func getAsFolder(_ ref: Referenceable, reportResult: @escaping Result<Content>.Fn) {
         reportResult(.success(ContentFolder(title: ref.title(), content: ref.referenceName, reference: ref)))
     }
+
 }
 
 public struct GitHubPersonalAccessAuth: BackendAuth {
@@ -137,6 +142,7 @@ public struct GitHubPersonalAccessAuth: BackendAuth {
         let tokenQuery = URLQueryItem(name: "access_token", value: token)
         reportResult(.success(GitHubDocRetrieval(rootUrl: self.rootUrl, basePath: basePath, http: HttpSynchronous(extraQueryItems: [tokenQuery]))))
     }
+
 }
 
 public struct GitHubFactory: BackendFactory {
@@ -155,7 +161,7 @@ public struct GitHubFactory: BackendFactory {
     }
 
     public func makeAuth() -> BackendAuth {
-        switch (self.authConfig?.string("type")) {
+        switch self.authConfig?.string("type") {
             case .some("personal-access-token"):
                 if let token = self.authConfig?.string("token") {
                     return GitHubPersonalAccessAuth(rootUrl: self.rootUrl, basePath: self.basePath, token: token)
@@ -169,4 +175,5 @@ public struct GitHubFactory: BackendFactory {
     public func makeDocFormatter() -> BackendDocFormatter {
         return GitHubDocFormatter()
     }
+
 }

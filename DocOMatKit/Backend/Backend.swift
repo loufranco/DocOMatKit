@@ -24,6 +24,7 @@ public struct NullAuth: BackendAuth {
     public func authenticate(_ reportResult: Result<BackendDocRetrieval>.Fn) {
         reportResult(.success(self.docRetrieval))
     }
+
 }
 
 /// Defines Retrieval
@@ -52,7 +53,7 @@ public func makeBackendFactory(_ config: Config?, authConfig: Config?) -> Backen
         return nil
     }
 
-    switch (type) {
+    switch type {
     case "GitHub":
         return GitHubFactory(config: config, authConfig: authConfig)
     default:

@@ -20,6 +20,7 @@ public protocol Http {
 
 
 extension Http {
+
     public func getJson(_ url: URL, reportResult: @escaping (Result<Any>) -> ()) {
         get(url) { r in
             r |> { try JSONSerialization.jsonObject(with: $0, options: JSONSerialization.ReadingOptions(rawValue: 0)) }
@@ -29,10 +30,11 @@ extension Http {
 
     public func getJsonAs<T>(_ url: URL, reportResult: @escaping Result<T>.Fn) {
         getJson(url) { r in
-            r |> { ($0 as? T).result.normalizeError(self.makeErrFn($0 as? [String : AnyObject])) }
+            r |> { ($0 as? T).result.normalizeError(self.makeErrFn($0 as? [String: AnyObject])) }
               |> reportResult
         }
     }
+
 }
 
 public struct HttpSynchronous: Http {
@@ -65,5 +67,5 @@ public struct HttpSynchronous: Http {
         }
 
     }
-}
 
+}

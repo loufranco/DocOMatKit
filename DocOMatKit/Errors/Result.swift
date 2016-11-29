@@ -15,7 +15,7 @@ public enum Result<T> {
     case error(Error)
 
     public func flatMap<B>(_ f: (T) -> Result<B>) -> Result<B> {
-        switch (self) {
+        switch self {
         case .success(let t):
             return f(t)
         case .error(let e):
@@ -24,7 +24,7 @@ public enum Result<T> {
     }
 
     public func flatMap<B>(_ f: (T) throws -> Result<B>) -> Result<B> {
-        switch (self) {
+        switch self {
         case .success(let t):
             do {
                 return try f(t)
@@ -37,7 +37,7 @@ public enum Result<T> {
     }
 
     public func map<B>(_ f: (T) -> B) -> Result<B> {
-        switch (self) {
+        switch self {
         case .success(let t):
             return .success(f(t))
         case .error(let e):
@@ -46,7 +46,7 @@ public enum Result<T> {
     }
 
     public func mapOptional<B>(_ f: (T) -> B?) -> Result<B> {
-        switch (self) {
+        switch self {
         case .success(let t):
             return Result<B>(f(t))
         case .error(let e):
@@ -55,7 +55,7 @@ public enum Result<T> {
     }
 
     public func map<B>(_ f: (T) throws -> B) -> Result<B> {
-        switch (self) {
+        switch self {
         case .success(let t):
             do {
                 return try .success(f(t))
@@ -97,6 +97,7 @@ public enum Result<T> {
         }
         return self
     }
+
 }
 
 precedencegroup ResultOperatorsGroup {

@@ -18,9 +18,11 @@ public protocol Config {
 
 /// The default keys for config objects.
 extension Config {
+
     public func backends() -> Config? {
         return dict("backends")
     }
+
 }
 
 /// A protocol for any configuration that just uses a dictionary.
@@ -39,9 +41,10 @@ public struct ConfigWithDictionary: DictConfig {
 
 /// The default behavior of any config that uses a dictionary
 extension DictConfig {
+
     public func dict(_ key: String?) -> Config? {
         guard let key = key else { return nil }
-        if let d = (configDict[key] as? [String: AnyObject]) {
+        if let d = configDict[key] as? [String: AnyObject] {
             return ConfigWithDictionary(configDict: d)
         }
         return nil
@@ -55,6 +58,7 @@ extension DictConfig {
     public func keyCount() -> Int {
         return configDict.keys.count
     }
+
 }
 
 /// A config that can load itself from a .plist file in a bundle

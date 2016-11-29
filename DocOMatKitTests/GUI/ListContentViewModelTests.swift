@@ -63,7 +63,7 @@ class ListContentViewModelTests: XCTestCase, DocListViewModelDelegate, DocViewCo
 
     }
 
-    func reportError(_ e: NSError){
+    func reportError(_ e: NSError) {
         self.lastError = e
     }
 

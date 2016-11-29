@@ -53,4 +53,5 @@ open class ContentViewController: UIViewController, ContentViewModelDelegate {
     open func setText(_ text: String) {
         self.textView.text = text
     }
+
 }

@@ -28,7 +28,7 @@ class GitHubBackendTests: XCTestCase {
 
     override func setUp() {
         let authConfig = PListConfig(name: "Auth/auth", bundle: Bundle(for: GitHubBackendTests.self)).dict("GitHub")
-        github = GitHubFactory(config: ConfigWithDictionary(configDict: config as [String : AnyObject]), authConfig: authConfig)
+        github = GitHubFactory(config: ConfigWithDictionary(configDict: config as [String: AnyObject]), authConfig: authConfig)
     }
 
     func testPublicAuth() {
@@ -76,7 +76,7 @@ class GitHubBackendTests: XCTestCase {
         auth.authenticate { docRetrievalResult in
             docRetrievalResult |> { (docRetrieval) -> Result<()> in
                 let ref = ContentReference(docRetrieval: docRetrieval, referenceName: "docs/03-about-the-license.md")
-                ref.get() { doc in
+                ref.get { doc in
                     XCTAssertResultSuccess(doc |> self.checkDocTitle)
                     completes = true
                 }
@@ -85,4 +85,5 @@ class GitHubBackendTests: XCTestCase {
         }
         XCTAssert(completes)
     }
+
 }
