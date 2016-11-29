@@ -27,7 +27,7 @@ class SequenceExtensionsTests: XCTestCase {
         XCTAssertEqual(String("".characters.takeWhile({ _ in true })), "")
         XCTAssertEqual(String("abcde".characters.takeWhile({ _ in false })), "")
     }
-    
+
     func testTakeWhile() {
         XCTAssertEqual(String("abcd".characters.takeWhile({ _ in true })), "abcd")
         XCTAssertEqual(String("abcd".characters.takeWhile({ $0 != "b" })), "a")

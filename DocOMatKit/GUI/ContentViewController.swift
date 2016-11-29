@@ -22,17 +22,17 @@ open class ContentViewController: UIViewController, ContentViewModelDelegate {
 
     let textView = UITextView()
     let viewModel: ContentViewModelable
-    
+
     init(viewModel: ContentViewModelable) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         self.viewModel.connect(self)
-    }    
+    }
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override open func loadView() {
         self.view = UIView()
         self.textView.translatesAutoresizingMaskIntoConstraints = false
@@ -43,13 +43,13 @@ open class ContentViewController: UIViewController, ContentViewModelDelegate {
             NSLayoutConstraint.constraints(withVisualFormat: "V:|[tv]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views)
         )
     }
-    
+
     open func hasContent() -> Bool {
         return self.textView.text != ""
     }
-    
+
     /// ContentViewModelDelegate
-    
+
     open func setText(_ text: String) {
         self.textView.text = text
     }

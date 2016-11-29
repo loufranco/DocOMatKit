@@ -8,7 +8,7 @@
 
 import UIKit
 
-///! Shows tabs for each major section of the documentation. If there are more than 
+///! Shows tabs for each major section of the documentation. If there are more than
 ///! can be shown, shows a ... tab for accessing the rest of them
 class HomeTabsViewController: UIViewController {
 

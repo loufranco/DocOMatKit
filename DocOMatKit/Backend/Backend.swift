@@ -16,11 +16,11 @@ public protocol BackendAuth {
 /// An authentication object that always succeeds.
 public struct NullAuth: BackendAuth {
     let docRetrieval: BackendDocRetrieval
-    
+
     public init(docRetrieval: BackendDocRetrieval) {
         self.docRetrieval = docRetrieval
     }
-    
+
     public func authenticate(_ reportResult: Result<BackendDocRetrieval>.Fn) {
         reportResult(.success(self.docRetrieval))
     }
@@ -51,7 +51,7 @@ public func makeBackendFactory(_ config: Config?, authConfig: Config?) -> Backen
     guard let type = config?.string("type") else {
         return nil
     }
-    
+
     switch (type) {
     case "GitHub":
         return GitHubFactory(config: config, authConfig: authConfig)

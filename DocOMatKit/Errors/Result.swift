@@ -10,10 +10,10 @@ import Foundation
 
 public enum Result<T> {
     public typealias Fn = (Result<T>) -> ()
-    
+
     case success(T)
     case error(Error)
-    
+
     public func flatMap<B>(_ f: (T) -> Result<B>) -> Result<B> {
         switch (self) {
         case .success(let t):
@@ -22,7 +22,7 @@ public enum Result<T> {
             return .error(e)
         }
     }
-    
+
     public func flatMap<B>(_ f: (T) throws -> Result<B>) -> Result<B> {
         switch (self) {
         case .success(let t):
@@ -35,7 +35,7 @@ public enum Result<T> {
             return .error(e)
         }
     }
-    
+
     public func map<B>(_ f: (T) -> B) -> Result<B> {
         switch (self) {
         case .success(let t):
@@ -44,7 +44,7 @@ public enum Result<T> {
             return .error(e)
         }
     }
-    
+
     public func mapOptional<B>(_ f: (T) -> B?) -> Result<B> {
         switch (self) {
         case .success(let t):
@@ -53,7 +53,7 @@ public enum Result<T> {
             return .error(e)
         }
     }
-    
+
     public func map<B>(_ f: (T) throws -> B) -> Result<B> {
         switch (self) {
         case .success(let t):
@@ -74,7 +74,7 @@ public enum Result<T> {
         }
         return self
     }
-    
+
     public init(_ t: T?, error: Error) {
         if let t = t {
             self = .success(t)
@@ -82,7 +82,7 @@ public enum Result<T> {
             self = .error(error)
         }
     }
-    
+
     public init(_ t: T?) {
         if let t = t {
             self = .success(t)
@@ -90,7 +90,7 @@ public enum Result<T> {
             self = .error(NSError(domain: "", code: 0, userInfo: nil))
         }
     }
-    
+
     public func normalizeError(_ error: Error) -> Result<T> {
         if case .error(_) = self {
             return .error(error)

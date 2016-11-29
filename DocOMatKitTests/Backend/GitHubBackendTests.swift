@@ -17,7 +17,7 @@ func XCTAssertResultSuccess<T>(_ result: Result<T>) {
 }
 
 class GitHubBackendTests: XCTestCase {
-    
+
     var github: GitHubFactory!
     let config = [
         "type": "GitHub",
@@ -25,12 +25,12 @@ class GitHubBackendTests: XCTestCase {
         "base-path": "docs",
         "title": "Doc-o-Mat Kit",
     ]
-    
+
     override func setUp() {
         let authConfig = PListConfig(name: "Auth/auth", bundle: Bundle(for: GitHubBackendTests.self)).dict("GitHub")
         github = GitHubFactory(config: ConfigWithDictionary(configDict: config as [String : AnyObject]), authConfig: authConfig)
     }
-    
+
     func testPublicAuth() {
         let auth = github.makeAuth()
         var completes = false
@@ -41,7 +41,7 @@ class GitHubBackendTests: XCTestCase {
         }
         XCTAssert(completes)
     }
-    
+
     func checkRefList(_ list: [Referenceable]) -> Result<()> {
         XCTAssert(list.count > 0)
         for l in list {
@@ -49,7 +49,7 @@ class GitHubBackendTests: XCTestCase {
         }
         return .success(())
     }
-    
+
     func checkDocTitle(_ doc: Content) -> Result<()> {
         XCTAssertNotEqual(doc.title, "")
         return .success(())
@@ -69,7 +69,7 @@ class GitHubBackendTests: XCTestCase {
         }
         XCTAssert(completes)
     }
-    
+
     func testGetRef() {
         let auth = github.makeAuth()
         var completes = false

@@ -21,10 +21,10 @@ public extension DocOMatErrorCode where Self: RawRepresentable {
     public func error() -> Error {
         return error(nil)
     }
-    
+
     public func error(_ msg: String?) -> Error {
         let userInfo: [String: AnyObject]? = {
-            if let msg = msg { 
+            if let msg = msg {
                 return [ NSLocalizedDescriptionKey: msg as AnyObject ]
             } else {
                 return nil

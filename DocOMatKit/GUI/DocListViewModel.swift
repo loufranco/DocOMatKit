@@ -10,23 +10,23 @@ import Foundation
 
 
 open class DocListViewModel: DocListViewModelable {
-    
+
     let factory: BackendFactory
     var docs: [Content]?
     let baseReference: Referenceable?
     var coordinator: DocViewCoordinator?
-    
+
     open let title: String
-    
+
     var delegate: DocListViewModelDelegate?
-    
+
     public convenience init?(config: Config?, authConfig: Config?) {
         guard let factory = makeBackendFactory(config, authConfig: authConfig) else {
             return nil
         }
         self.init(title: config?.string("title") ?? "", factory: factory, baseReference: nil)
     }
-    
+
     public init(title: String, factory: BackendFactory, baseReference: Referenceable?) {
         self.title = title
         self.factory = factory
@@ -58,19 +58,19 @@ open class DocListViewModel: DocListViewModelable {
     fileprivate func loadDocs(_ docRetrieval: BackendDocRetrieval) -> (_ list: [Referenceable]) -> Result<()> {
         return { (_ list: [Referenceable]) in self.loadDocs(docRetrieval, list) }
     }
-    
+
     open func docCount() -> Int {
         return self.docs?.count ?? 0
     }
-    
+
     open func docTitle(_ index: Int) -> String {
         return self.docs?[index].title ?? ""
     }
-    
+
     open func docCanHaveChildren(_ index: Int) -> Bool {
         return self.docs?[index].canHaveChildren() ?? false
     }
-    
+
     open func docSelected(_ index: Int) {
         if docCanHaveChildren(index) {
             self.delegate?.navigateTo(self.childModel(index))
@@ -80,15 +80,15 @@ open class DocListViewModel: DocListViewModelable {
             }
         }
     }
-    
+
     fileprivate func childModel(_ index: Int) -> DocListViewModelable {
         let ref = self.docs?[index].reference
         return DocListViewModel(title: ref?.title() ?? self.title, factory: self.factory, baseReference: ref).connect(coordinator: self.coordinator!)
     }
-    
+
     open func connect(delegate: DocListViewModelDelegate) -> DocListViewModelable {
         self.delegate = delegate
-        
+
         self.factory.makeAuth().authenticate { [weak self] docRetrievalResult in
             guard let strongSelf = self else { return }
             docRetrievalResult |> { (docRetrieval) -> Result<()> in
@@ -101,15 +101,15 @@ open class DocListViewModel: DocListViewModelable {
             }
             docRetrievalResult.onError { e in strongSelf.delegate?.reportError(e as NSError) }
         }
-        
+
         return self
     }
-    
+
     /// DocListContentViewDelegate
-    
+
     open func connect(coordinator: DocViewCoordinator) -> DocListViewModelable {
         self.coordinator = coordinator
         return self
     }
-    
+
 }

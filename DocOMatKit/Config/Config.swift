@@ -31,7 +31,7 @@ public protocol DictConfig: Config {
 /// A concrete configuration type that must be initialized with a dictionary.
 public struct ConfigWithDictionary: DictConfig {
     public let configDict: [String: AnyObject]
-    
+
     public init(configDict: [String: AnyObject]) {
         self.configDict = configDict
     }
@@ -46,12 +46,12 @@ extension DictConfig {
         }
         return nil
     }
-    
+
     public func string(_ key: String?) -> String? {
         guard let key = key else { return nil }
         return configDict[key] as? String
     }
-    
+
     public func keyCount() -> Int {
         return configDict.keys.count
     }

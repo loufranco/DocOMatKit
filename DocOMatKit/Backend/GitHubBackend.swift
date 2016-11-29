@@ -26,14 +26,14 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
     public let rootUrl: URL
     public let basePath: String?
     public let http: Http
-    
+
     public init(rootUrl: URL, basePath: String?, http: Http) {
         self.rootUrl = rootUrl
         self.basePath = basePath
         self.http = http
         self.http.makeErrFn = makeGitHubError
     }
-    
+
     public func makeGitHubError(_ response: [String: AnyObject]?) -> Error {
         switch (response?["message"] as? String) {
         case .some(let msg):
@@ -42,7 +42,7 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
             return DocOMatRetrievalCode.parse.error("Unexpected JSON returned: \(response)")
         }
     }
-    
+
     fileprivate func jsonToContentReference(_ json: AnyObject) throws -> Referenceable {
         guard let dict = json as? [String: AnyObject],
             let path = dict["path"] as? String,
@@ -58,25 +58,25 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
             throw DocOMatRetrievalCode.parse.error("Unexpected JSON returned: [\(dict)]")
         }
     }
-    
+
     func getList(_ url: URL, reportResult: @escaping Result<[Referenceable]>.Fn) {
         http.getJsonAs(url) { (r: Result<[AnyObject]>) in
             r |> { try $0.map(self.jsonToContentReference) }
               |> reportResult
         }
     }
-    
+
     public func getList(_ reportResult: @escaping Result<[Referenceable]>.Fn) {
         getList(self.rootUrl.appendingPathComponent(self.basePath ?? ""), reportResult: reportResult)
     }
-    
+
     public func getList(_ ref: Referenceable?, reportResult: @escaping Result<[Referenceable]>.Fn) {
         guard let ref = ref else {
             return getList(reportResult)
         }
         getList(self.rootUrl.appendingPathComponent(ref.referenceName), reportResult: reportResult)
     }
-    
+
     fileprivate func parseDir(_ ref: Referenceable, response: [String: AnyObject]) -> Result<Content> {
         guard
             let name = response["name"] as? String,
@@ -100,10 +100,10 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
                     return UnknownFile(title: ref.title(), content: content, reference: ref)
                 }
             }
-        
+
         return doc.normalizeError(DocOMatRetrievalCode.parse.error("Unexpected JSON returned"))
     }
-    
+
     fileprivate func parseContentResponse(_ ref: Referenceable, response: [String: AnyObject]) -> Result<Content> {
         switch (response["type"] as? String) {
         case .none:
@@ -116,13 +116,13 @@ public struct GitHubDocRetrieval: BackendDocRetrieval {
             return .error(DocOMatRetrievalCode.parse.error("Unexpected type [\(type)] returned"))
         }
     }
-    
+
     public func get(_ ref: Referenceable, reportResult: @escaping Result<Content>.Fn) {
         http.getJsonAs(self.rootUrl.appendingPathComponent(ref.referenceName)) { (r: Result<[String: AnyObject]>) in
             r |> { self.parseContentResponse(ref, response: $0) } |> reportResult
         }
     }
-    
+
     public func getAsFolder(_ ref: Referenceable, reportResult: @escaping Result<Content>.Fn) {
         reportResult(.success(ContentFolder(title: ref.title(), content: ref.referenceName, reference: ref)))
     }
@@ -132,7 +132,7 @@ public struct GitHubPersonalAccessAuth: BackendAuth {
     public let rootUrl: URL
     public let basePath: String?
     public let token: String
-    
+
     public func authenticate(_ reportResult: Result<BackendDocRetrieval>.Fn) {
         let tokenQuery = URLQueryItem(name: "access_token", value: token)
         reportResult(.success(GitHubDocRetrieval(rootUrl: self.rootUrl, basePath: basePath, http: HttpSynchronous(extraQueryItems: [tokenQuery]))))
@@ -140,11 +140,11 @@ public struct GitHubPersonalAccessAuth: BackendAuth {
 }
 
 public struct GitHubFactory: BackendFactory {
-    
+
     let rootUrl: URL
     let basePath: String?
     let authConfig: Config?
-    
+
     public init?(config: Config?, authConfig: Config?) {
         guard let urlString = config?.string("url"), let url = URL(string: urlString) else {
             return nil
@@ -153,7 +153,7 @@ public struct GitHubFactory: BackendFactory {
         self.basePath = config?.string("base-path")
         self.authConfig = authConfig
     }
-    
+
     public func makeAuth() -> BackendAuth {
         switch (self.authConfig?.string("type")) {
             case .some("personal-access-token"):
@@ -165,7 +165,7 @@ public struct GitHubFactory: BackendFactory {
         }
         return NullAuth(docRetrieval: GitHubDocRetrieval(rootUrl: rootUrl, basePath: basePath, http: HttpSynchronous()))
     }
-    
+
     public func makeDocFormatter() -> BackendDocFormatter {
         return GitHubDocFormatter()
     }

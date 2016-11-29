@@ -19,7 +19,7 @@ struct MockDocRetrieval: BackendDocRetrieval {
     public func getList(_ reportResult: @escaping Result<[Referenceable]>.Fn) {
         getList(nil, reportResult: reportResult)
     }
-    
+
     public func getList(_ ref: Referenceable?, reportResult: @escaping Result<[Referenceable]>.Fn) {
         switch (ref?.referenceName) {
         case .none:
@@ -38,11 +38,11 @@ struct MockDocRetrieval: BackendDocRetrieval {
             reportResult(Result<[Referenceable]>(nil))
         }
     }
-    
+
     public func get(_ ref: Referenceable, reportResult: @escaping Result<Content>.Fn) {
         reportResult(Result<Content>(UnknownFile(title: ref.referenceName, content: ref.referenceName, reference: ref)))
     }
-    
+
     public func getAsFolder(_ ref: Referenceable, reportResult: @escaping Result<Content>.Fn) {
         reportResult(Result<Content>(ContentFolder(title: ref.referenceName, content: ref.referenceName, reference: ref)))
     }
@@ -52,7 +52,7 @@ struct MockBackendFactory: BackendFactory {
     func makeAuth() -> BackendAuth {
         return NullAuth(docRetrieval: MockDocRetrieval())
     }
-    
+
     func makeDocFormatter() -> BackendDocFormatter {
         return MockDocFormatter()
     }
