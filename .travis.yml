@@ -1,8 +1,8 @@
 language: objective-c
-osx_image: xcode8
+osx_image: xcode8.1
 xcode_project: DocOMatKit.xcodeproj
 xcode_scheme: DocOMatKit
-xcode_sdk: iphonesimulator10.0
+xcode_sdk: iphonesimulator10.1
 install: 
   - gem install travis-xcodebuild
   - if [ -e DocOMatKitTests/TestData/auth.plist ] ; then sed -es/GITHUB_PERSONAL_ACCESS_TOKEN/$GITHUB_PERSONAL_ACCESS_TOKEN/ DocOMatKitTests/TestData/auth.plist > DocOMatKitTests/Auth/auth.plist  ; fi
